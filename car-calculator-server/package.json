@@ -1,0 +1,23 @@
+{
+  "name": "car-calculator-server",
+  "version": "1.0.0",
+  "description": "汽车落地价计算器后端服务",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "dev": "nodemon index.js"
+  },
+  "keywords": ["car", "calculator", "serverless"],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.3.1",
+    "express": "^4.18.2",
+    "jsonwebtoken": "^9.0.2",
+    "mongoose": "^8.0.0",
+    "puppeteer": "^22.0.0",
+    "sql.js": "^1.10.3"
+  }
+}
