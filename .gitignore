@@ -1,0 +1,31 @@
+# Dependencies
+node_modules/
+
+# Logs
+*.log
+npm_log*.txt
+
+# Temp files
+*.txt
+test.html
+r.txt
+r2.txt
+r3.txt
+r4.txt
+r5.txt
+test_result.txt
+file_list.txt
+
+# Environment
+.env
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Trae internal
+.trae/
