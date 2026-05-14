@@ -1,0 +1,1702 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>汽车落地价计算器 | AI智能版</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/sql-wasm.js"></script>
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg-primary: #0a0e17;
+      --bg-secondary: #111827;
+      --bg-card: #1a1f2e;
+      --bg-card-hover: #222839;
+      --bg-input: #1e2433;
+      --border: #2a3142;
+      --border-focus: #00d4aa;
+      --accent: #00d4aa;
+      --accent-hover: #00b894;
+      --accent-glow: rgba(0, 212, 170, 0.15);
+      --accent-secondary: #00b4d8;
+      --text-primary: #e8ecf1;
+      --text-secondary: #8899aa;
+      --text-muted: #5a6a7a;
+      --success: #00d4aa;
+      --warning: #f0a500;
+      --danger: #ff4757;
+      --sidebar-bg: #0d1220;
+      --sidebar-active: rgba(0, 212, 170, 0.1);
+    }
+
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+    }
+
+    /* ========== 登录页 ========== */
+    .auth-page {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #0a0e17 0%, #1a1f2e 50%, #0d1220 100%);
+      padding: 20px;
+    }
+    .auth-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 40px;
+      width: 100%;
+      max-width: 420px;
+      box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+    }
+    .auth-card h1 { text-align: center; margin-bottom: 8px; color: var(--text-primary); font-size: 24px; }
+    .auth-card .subtitle { text-align: center; color: var(--text-secondary); margin-bottom: 32px; font-size: 14px; }
+    .form-group { margin-bottom: 20px; }
+    .form-group label { display: block; margin-bottom: 8px; font-size: 14px; font-weight: 500; color: var(--text-secondary); }
+    .form-group input {
+      width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px;
+      font-size: 15px; transition: all 0.2s; background: var(--bg-input); color: var(--text-primary);
+    }
+    .form-group input:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .form-group input::placeholder { color: var(--text-muted); }
+    .btn-primary {
+      width: 100%; padding: 14px; background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      color: #0a0e17; border: none; border-radius: 8px; font-size: 16px; font-weight: 600;
+      cursor: pointer; transition: all 0.2s;
+    }
+    .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+    .auth-switch { text-align: center; margin-top: 20px; font-size: 14px; color: var(--text-secondary); }
+    .auth-switch a { color: var(--accent); cursor: pointer; text-decoration: none; }
+    .error-msg { color: var(--danger); font-size: 13px; margin-top: 8px; display: none; }
+
+    /* ========== 主布局 ========== */
+    .app-container { display: none; min-height: 100vh; }
+    .app-container.show { display: flex; }
+
+    /* ========== 侧边栏 ========== */
+    .sidebar {
+      width: 240px; background: var(--sidebar-bg); min-height: 100vh; position: fixed;
+      left: 0; top: 0; display: flex; flex-direction: column; z-index: 100;
+      border-right: 1px solid var(--border);
+    }
+    .sidebar-header {
+      padding: 20px; display: flex; align-items: center; gap: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+    .sidebar-header i { font-size: 24px; color: var(--accent); }
+    .sidebar-header span { color: var(--text-primary); font-size: 18px; font-weight: 600; }
+    .sidebar-nav { flex: 1; padding: 16px 0; }
+    .nav-item {
+      display: flex; align-items: center; gap: 12px; padding: 14px 20px;
+      color: var(--text-secondary); cursor: pointer; transition: all 0.2s; text-decoration: none;
+      border-left: 3px solid transparent;
+    }
+    .nav-item:hover { background: rgba(255,255,255,0.03); color: var(--text-primary); }
+    .nav-item.active {
+      background: var(--sidebar-active); color: var(--accent);
+      border-left-color: var(--accent);
+    }
+    .nav-item i { font-size: 18px; width: 24px; text-align: center; }
+    .nav-item span { font-size: 14px; }
+    .sidebar-footer { padding: 16px 20px; border-top: 1px solid var(--border); }
+    .sidebar-footer a { display: block; color: var(--text-muted); font-size: 12px; margin-bottom: 8px; text-decoration: none; }
+    .sidebar-footer a:hover { color: var(--text-secondary); }
+
+    /* ========== 主内容 ========== */
+    .main-content { flex: 1; margin-left: 240px; min-height: 100vh; }
+
+    /* ========== 顶部栏 ========== */
+    .top-bar {
+      background: var(--bg-secondary); padding: 16px 32px;
+      display: flex; justify-content: flex-end; align-items: center; gap: 20px;
+      border-bottom: 1px solid var(--border); position: sticky; top: 0; z-index: 50;
+    }
+    .top-bar .notification { position: relative; cursor: pointer; color: var(--text-secondary); font-size: 18px; }
+    .top-bar .notification .badge {
+      position: absolute; top: -5px; right: -5px; width: 18px; height: 18px;
+      background: var(--danger); color: white; font-size: 11px; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .user-info { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .user-info .avatar {
+      width: 36px; height: 36px; border-radius: 50%;
+      background: linear-gradient(135deg, var(--accent), var(--accent-secondary));
+      display: flex; align-items: center; justify-content: center; color: #0a0e17; font-weight: 600;
+    }
+    .user-info .name { font-size: 14px; font-weight: 500; color: var(--text-primary); }
+    .logout-btn { color: var(--danger); cursor: pointer; font-size: 14px; margin-left: 8px; }
+
+    /* ========== 页面 ========== */
+    .page { display: none; padding: 32px; }
+    .page.active { display: block; }
+    .page-header { margin-bottom: 24px; }
+    .page-header h2 { font-size: 24px; font-weight: 600; color: var(--text-primary); }
+
+    /* ========== 卡片 ========== */
+    .card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+      padding: 24px; margin-bottom: 24px; transition: all 0.2s;
+    }
+    .card:hover { border-color: rgba(0,212,170,0.2); }
+    .card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .card-header h3 { font-size: 16px; font-weight: 600; color: var(--text-primary); }
+
+    /* ========== 统计 ========== */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; margin-bottom: 24px; }
+    .stat-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; padding: 20px;
+    }
+    .stat-card .label { font-size: 13px; color: var(--text-secondary); margin-bottom: 8px; }
+    .stat-card .value { font-size: 28px; font-weight: 700; color: var(--accent); }
+
+    /* ========== 表单 ========== */
+    .form-row { display: grid; grid-template-columns: repeat(2, 1fr); gap: 16px; margin-bottom: 16px; }
+    .form-row.single { grid-template-columns: 1fr; }
+    .form-control {
+      width: 100%; padding: 12px 16px; border: 1px solid var(--border); border-radius: 8px;
+      font-size: 14px; transition: all 0.2s; background: var(--bg-input); color: var(--text-primary);
+    }
+    .form-control:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-glow); }
+    .form-control::placeholder { color: var(--text-muted); }
+    textarea.form-control { resize: vertical; min-height: 80px; }
+    .form-label { display: block; margin-bottom: 6px; font-size: 13px; font-weight: 500; color: var(--text-secondary); }
+    .form-label .required { color: var(--danger); }
+
+    /* ========== 按钮 ========== */
+    .btn {
+      padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 500;
+      cursor: pointer; transition: all 0.2s; border: none;
+    }
+    .btn-secondary { background: var(--bg-input); color: var(--text-primary); border: 1px solid var(--border); }
+    .btn-secondary:hover { background: var(--bg-card-hover); }
+    .btn-success { background: var(--success); color: #0a0e17; }
+    .btn-success:hover { opacity: 0.9; }
+    .btn-danger { background: var(--danger); color: white; }
+    .btn-danger:hover { opacity: 0.9; }
+    .btn-accent { background: linear-gradient(135deg, var(--accent), var(--accent-secondary)); color: #0a0e17; font-weight: 600; }
+    .btn-accent:hover { opacity: 0.9; transform: translateY(-1px); }
+    .btn-group { display: flex; gap: 12px; margin-top: 20px; }
+
+    /* ========== 计算器布局 ========== */
+    .calculator-layout { display: grid; grid-template-columns: 1fr 380px; gap: 24px; }
+    @media (max-width: 1200px) { .calculator-layout { grid-template-columns: 1fr; } }
+
+    /* ========== AI面板 ========== */
+    .ai-panel {
+      background: linear-gradient(135deg, #0d1220 0%, #1a1f2e 100%);
+      border: 1px solid var(--border); border-radius: 16px; padding: 24px; color: var(--text-primary);
+      position: sticky; top: 80px;
+    }
+    .ai-panel-header {
+      display: flex; align-items: center; gap: 10px; margin-bottom: 20px;
+      padding-bottom: 16px; border-bottom: 1px solid var(--border);
+    }
+    .ai-panel-header i { font-size: 24px; color: var(--accent); }
+    .ai-panel-header h3 { font-size: 18px; font-weight: 600; }
+    .ai-section {
+      background: rgba(0,212,170,0.05); border: 1px solid rgba(0,212,170,0.1);
+      border-radius: 12px; padding: 16px; margin-bottom: 16px;
+    }
+    .ai-section-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .ai-car-info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    .ai-info-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 10px; border-radius: 8px; }
+    .ai-info-item .label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+    .ai-info-item .value { font-size: 15px; font-weight: 600; color: var(--text-primary); }
+    .ai-list { list-style: none; }
+    .ai-list li {
+      padding: 8px 0; font-size: 13px; display: flex; align-items: flex-start; gap: 8px;
+      border-bottom: 1px solid rgba(255,255,255,0.05); color: var(--text-secondary);
+    }
+    .ai-list li:last-child { border-bottom: none; }
+    .ai-discount-box {
+      background: rgba(255,255,255,0.03); border: 1px solid var(--border); border-radius: 8px;
+      padding: 12px; font-size: 13px; line-height: 1.6; margin-bottom: 12px; min-height: 60px;
+      color: var(--text-secondary);
+    }
+    .ai-discount-edit {
+      width: 100%; background: var(--bg-input); border: 1px solid var(--border); border-radius: 8px;
+      padding: 10px; color: var(--text-primary); font-size: 13px; resize: vertical; min-height: 80px; margin-bottom: 10px;
+    }
+    .ai-discount-edit:focus { outline: none; border-color: var(--accent); }
+    .ai-discount-edit::placeholder { color: var(--text-muted); }
+    .ai-loading { display: flex; align-items: center; justify-content: center; gap: 10px; padding: 20px; font-size: 14px; color: var(--text-secondary); }
+    .ai-loading .spinner { width: 20px; height: 20px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .ai-empty { text-align: center; padding: 30px 20px; color: var(--text-muted); }
+    .ai-empty i { font-size: 40px; margin-bottom: 10px; display: block; }
+    .ai-data-date {
+      display: flex; align-items: center; gap: 8px; padding: 10px 14px;
+      background: rgba(0, 212, 170, 0.06); border: 1px solid rgba(0, 212, 170, 0.15);
+      border-radius: 8px; margin-bottom: 16px; font-size: 13px; color: var(--text-secondary);
+    }
+    .ai-data-date i { color: var(--accent); }
+    .ai-live-badge {
+      display: inline-flex; align-items: center; gap: 4px; padding: 2px 8px;
+      background: rgba(0, 212, 170, 0.15); border-radius: 10px; font-size: 11px;
+      color: var(--accent); font-weight: 500;
+    }
+    .ai-live-badge i { font-size: 10px; }
+    .ai-sources {
+      margin-top: 16px; padding: 12px 14px;
+      background: var(--bg-input); border: 1px solid var(--border);
+      border-radius: 8px; font-size: 12px;
+    }
+    .ai-source-title {
+      color: var(--text-secondary); margin-bottom: 8px; font-weight: 500;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .ai-source-title i { color: var(--accent-secondary); }
+    .ai-source-link {
+      display: block; padding: 4px 0; color: var(--accent-secondary);
+      text-decoration: none; line-height: 1.5; word-break: break-all;
+      border-bottom: 1px solid transparent; transition: border-color 0.2s;
+    }
+    .ai-source-link:hover { border-bottom-color: var(--accent-secondary); }
+
+    /* ========== 搜索下拉 ========== */
+    .car-search-container { position: relative; }
+    .car-search-dropdown {
+      position: absolute; top: 100%; left: 0; right: 0; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      max-height: 300px; overflow-y: auto; z-index: 100; display: none; margin-top: 4px;
+    }
+    .search-source-toggle { display: flex; gap: 4px; margin-top: 6px; }
+    .search-src-btn {
+      padding: 4px 12px; border-radius: 12px; border: 1px solid var(--border);
+      background: transparent; color: var(--text-muted); font-size: 12px; cursor: pointer; transition: all 0.2s;
+    }
+    .search-src-btn:hover { border-color: var(--accent); color: var(--accent); }
+    .search-src-btn.active { background: var(--accent); color: #fff; border-color: var(--accent); }
+    .car-search-dropdown.show { display: block; }
+    .car-search-item { padding: 12px 16px; cursor: pointer; border-bottom: 1px solid var(--border); transition: background 0.2s; }
+    .car-search-item:hover { background: var(--bg-card-hover); }
+    .car-search-item:last-child { border-bottom: none; }
+    .car-search-item .name { font-weight: 500; color: var(--text-primary); margin-bottom: 4px; }
+    .car-search-item .info { font-size: 12px; color: var(--text-muted); }
+    .car-search-loading { padding: 20px; text-align: center; color: var(--text-secondary); }
+    .car-search-loading .spinner { width: 16px; height: 16px; border: 2px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; display: inline-block; margin-right: 8px; vertical-align: middle; }
+
+    /* ========== 结果 ========== */
+    .result-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; margin-bottom: 20px; }
+    .result-item { text-align: center; padding: 16px; background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; }
+    .result-item .label { font-size: 12px; color: var(--text-muted); margin-bottom: 4px; }
+    .result-item .value { font-size: 18px; font-weight: 600; color: var(--text-primary); }
+    .result-item .value.highlight { color: var(--accent); }
+    .result-item .value.success { color: var(--success); }
+    .final-result {
+      text-align: center; padding: 24px; border-radius: 12px;
+      background: linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,180,216,0.15));
+      border: 1px solid rgba(0,212,170,0.2);
+    }
+    .final-result .label { font-size: 14px; color: var(--text-secondary); margin-bottom: 8px; }
+    .final-result .value { font-size: 36px; font-weight: 700; color: var(--accent); }
+    .final-result .detail { font-size: 13px; color: var(--text-muted); margin-top: 8px; }
+
+    /* ========== 记录列表 ========== */
+    .list-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .view-toggle { display: flex; gap: 8px; }
+    .view-btn {
+      padding: 8px 16px; border: 1px solid var(--border); background: var(--bg-input);
+      border-radius: 6px; cursor: pointer; font-size: 13px; transition: all 0.2s; color: var(--text-secondary);
+    }
+    .view-btn:hover { background: var(--bg-card-hover); }
+    .view-btn.active { background: var(--accent); color: #0a0e17; border-color: var(--accent); }
+    .record-list { display: flex; flex-direction: column; gap: 12px; }
+    .record-card {
+      background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px;
+      overflow: hidden; transition: all 0.2s;
+    }
+    .record-card:hover { border-color: rgba(0,212,170,0.2); }
+    .record-header { padding: 16px 20px; cursor: pointer; display: flex; justify-content: space-between; align-items: flex-start; }
+    .record-header:hover { background: rgba(255,255,255,0.02); }
+    .record-title { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .record-title .name { font-weight: 600; font-size: 15px; color: var(--text-primary); }
+    .badge { padding: 4px 10px; border-radius: 6px; font-size: 12px; font-weight: 500; }
+    .badge-accent { background: rgba(0,212,170,0.1); color: var(--accent); border: 1px solid rgba(0,212,170,0.2); }
+    .badge-green { background: rgba(0,212,170,0.1); color: var(--success); }
+    .badge-gray { background: rgba(255,255,255,0.05); color: var(--text-muted); border: 1px solid var(--border); }
+    .badge-purple { background: rgba(139,92,246,0.1); color: #a78bfa; border: 1px solid rgba(139,92,246,0.2); }
+    .badge-ai { background: linear-gradient(135deg, rgba(0,212,170,0.15), rgba(0,180,216,0.15)); color: var(--accent); border: 1px solid rgba(0,212,170,0.2); }
+    .record-price { font-size: 20px; font-weight: 700; color: var(--accent); }
+    .record-content { max-height: 0; overflow: hidden; transition: max-height 0.3s ease; }
+    .record-card.expanded .record-content { max-height: 800px; }
+    .record-details { padding: 0 20px 20px; }
+    .detail-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+    .detail-item { font-size: 13px; }
+    .detail-item .label { color: var(--text-muted); margin-bottom: 2px; }
+    .detail-item .value { color: var(--text-primary); font-weight: 500; }
+    .comment-section { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 8px; padding: 12px; }
+    .comment-section .label { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+
+    .table-container { overflow-x: auto; background: var(--bg-card); border: 1px solid var(--border); border-radius: 12px; }
+    table { width: 100%; border-collapse: collapse; font-size: 13px; }
+    th, td { padding: 14px 16px; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: rgba(255,255,255,0.02); font-weight: 600; color: var(--text-muted); font-size: 12px; text-transform: uppercase; }
+    tr:hover td { background: rgba(255,255,255,0.02); }
+    .actions { display: flex; gap: 8px; }
+    .action-btn { padding: 6px 10px; border: none; background: transparent; cursor: pointer; border-radius: 4px; font-size: 13px; transition: all 0.2s; color: var(--text-secondary); }
+    .action-btn:hover { background: rgba(255,255,255,0.05); }
+    .action-btn.delete { color: var(--danger); }
+    .empty-state { text-align: center; padding: 60px 20px; color: var(--text-muted); }
+    .empty-state i { font-size: 48px; margin-bottom: 16px; display: block; opacity: 0.5; }
+
+    /* ========== Toast ========== */
+    .toast {
+      position: fixed; top: 24px; right: 24px; padding: 14px 24px; background: var(--bg-card);
+      border: 1px solid var(--border); border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.4);
+      font-size: 14px; z-index: 1000; transform: translateX(150%); transition: transform 0.3s ease;
+    }
+    .toast.show { transform: translateX(0); }
+    .toast.success { border-left: 4px solid var(--success); color: var(--success); }
+    .toast.error { border-left: 4px solid var(--danger); color: var(--danger); }
+
+    /* ========== 设置页 ========== */
+    .settings-section { margin-bottom: 8px; }
+    .settings-section h4 { font-size: 14px; font-weight: 600; color: var(--text-primary); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
+    .settings-section h4 i { color: var(--accent); }
+    .settings-hint { font-size: 12px; color: var(--text-muted); margin-top: 6px; line-height: 1.5; }
+    .settings-hint a { color: var(--accent); text-decoration: none; }
+    .settings-hint a:hover { text-decoration: underline; }
+    .api-status { display: inline-flex; align-items: center; gap: 6px; padding: 4px 10px; border-radius: 6px; font-size: 12px; margin-top: 8px; }
+    .api-status.connected { background: rgba(0,212,170,0.1); color: var(--success); }
+    .api-status.disconnected { background: rgba(255,71,87,0.1); color: var(--danger); }
+
+    /* ========== 响应式 ========== */
+    @media (max-width: 768px) {
+      .sidebar { width: 64px; }
+      .sidebar-header span, .nav-item span, .sidebar-footer { display: none; }
+      .main-content { margin-left: 64px; }
+      .stats-grid { grid-template-columns: 1fr; }
+      .form-row { grid-template-columns: 1fr; }
+      .result-grid { grid-template-columns: repeat(2, 1fr); }
+      .calculator-layout { grid-template-columns: 1fr; }
+      .ai-panel { position: static; }
+    }
+    .hidden { display: none !important; }
+  </style>
+</head>
+<body>
+  <div id="toast" class="toast"></div>
+
+  <!-- 登录页 -->
+  <div id="authPage" class="auth-page">
+    <div class="auth-card">
+      <h1>🚗 汽车落地价计算器</h1>
+      <p class="subtitle" id="authSubtitle">登录您的账户</p>
+      <form id="authForm">
+        <div class="form-group">
+          <label>用户名</label>
+          <input type="text" id="authUsername" placeholder="请输入用户名" required>
+        </div>
+        <div class="form-group">
+          <label>密码</label>
+          <input type="password" id="authPassword" placeholder="请输入密码" required>
+        </div>
+        <p id="authError" class="error-msg"></p>
+        <button type="submit" class="btn-primary" id="authBtn"><span id="authBtnText">登录</span></button>
+      </form>
+      <p class="auth-switch">
+        <span id="authSwitchText">还没有账户？</span>
+        <a id="authSwitchLink">立即注册</a>
+      </p>
+      <div style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border);">
+        <p style="font-size: 12px; color: var(--text-muted); margin-bottom: 10px; text-align: center;">💡 没有后端服务？使用演示账号直接体验</p>
+        <button type="button" class="btn-primary" style="background: var(--success);" onclick="demoLogin()">
+          <i class="fa fa-play-circle"></i> 演示模式登录
+        </button>
+        <p style="font-size: 11px; color: var(--text-muted); margin-top: 8px; text-align: center;">账号: demo / 密码: 123456</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 主应用 -->
+  <div id="appContainer" class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <i class="fa fa-car"></i>
+        <span>汽车计算器</span>
+      </div>
+      <nav class="sidebar-nav">
+        <a class="nav-item active" data-page="dashboard"><i class="fa fa-home"></i><span>首页</span></a>
+        <a class="nav-item" data-page="calculator"><i class="fa fa-calculator"></i><span>价格计算</span></a>
+        <a class="nav-item" data-page="records"><i class="fa fa-list-ul"></i><span>对比列表</span></a>
+        <a class="nav-item" data-page="settings"><i class="fa fa-cog"></i><span>设置</span></a>
+      </nav>
+      <div class="sidebar-footer">
+        <a href="#">帮助中心</a>
+        <a href="#">隐私政策</a>
+      </div>
+    </aside>
+
+    <main class="main-content">
+      <header class="top-bar">
+        <div class="notification"><i class="fa fa-bell-o"></i><span class="badge">1</span></div>
+        <div class="user-info">
+          <div class="avatar" id="userAvatar">U</div>
+          <span class="name" id="userName">User</span>
+          <span class="logout-btn" onclick="logout()"><i class="fa fa-sign-out"></i></span>
+        </div>
+      </header>
+
+      <!-- 首页 -->
+      <div id="pageDashboard" class="page active">
+        <div class="page-header"><h2>欢迎回来，<span id="welcomeName">User</span>！</h2></div>
+        <div class="stats-grid">
+          <div class="stat-card"><div class="label">总记录数</div><div class="value" id="statTotal">0</div></div>
+          <div class="stat-card"><div class="label">本月新增</div><div class="value" id="statMonthly">0</div></div>
+          <div class="stat-card"><div class="label">平均落地价</div><div class="value" id="statAvg">¥0</div></div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h3>最近计算记录</h3>
+            <button class="btn btn-secondary" onclick="navigateTo('calculator')"><i class="fa fa-plus"></i> 新建计算</button>
+          </div>
+          <div id="recentRecords"></div>
+        </div>
+      </div>
+
+      <!-- 计算器 -->
+      <div id="pageCalculator" class="page">
+        <div class="page-header"><h2>价格计算</h2></div>
+        <div class="calculator-layout">
+          <div class="calculator-form">
+            <div class="card">
+              <div class="form-row single">
+                <div class="car-search-container">
+                  <label class="form-label">车辆名称 / 型号 <span class="required">*</span></label>
+                  <input type="text" id="carName" class="form-control" placeholder="输入车型名称，如：特斯拉 Model Y" autocomplete="off">
+                  <div class="search-source-toggle">
+                    <button class="search-src-btn active" data-source="local" onclick="setSearchSource('local')"><i class="fa fa-database"></i> 本地库</button>
+                    <button class="search-src-btn" data-source="ai" onclick="setSearchSource('ai')"><i class="fa fa-cloud"></i> AI搜索</button>
+                  </div>
+                  <div id="carSearchDropdown" class="car-search-dropdown"></div>
+                </div>
+              </div>
+              <div class="form-row">
+                <div>
+                  <label class="form-label">车辆类型 <span class="required">*</span></label>
+                  <select id="carType" class="form-control">
+                    <option value="fuel">燃油车（2.0L及以下）</option>
+                    <option value="phev">插电混动（新能源）</option>
+                    <option value="ev">纯电动（新能源）</option>
+                  </select>
+                </div>
+                <div>
+                  <label class="form-label">车辆官方指导价（元）<span class="required">*</span></label>
+                  <input type="number" id="originalPrice" class="form-control" value="0" min="0">
+                </div>
+              </div>
+              <div class="form-row">
+                <div><label class="form-label">现金优惠（元）</label><input type="number" id="discount" class="form-control" value="0" min="0"></div>
+                <div><label class="form-label">保险费用（元）<span style="font-size:11px;color:var(--accent);">（自动预估）</span></label><input type="number" id="insurance" class="form-control" value="0" min="0"></div>
+              </div>
+              <div class="form-row">
+                <div><label class="form-label">上牌/装潢等额外费用（元）</label><input type="number" id="extraFee" class="form-control" value="0" min="0"></div>
+                <div><label class="form-label">其他优惠（元）</label><input type="number" id="extraDiscount" class="form-control" value="0" min="0"></div>
+              </div>
+              <div class="form-row single">
+                <div>
+                  <label class="form-label">选择补贴类型（二选一）</label>
+                  <select id="subsidyCategory" class="form-control" onchange="onSubsidyChange()">
+                    <option value="none">无补贴</option>
+                    <option value="national">国家以旧换新补贴（需旧车）</option>
+                    <option value="suzhou">苏州购新补贴（无需旧车）</option>
+                  </select>
+                </div>
+              </div>
+              <div class="form-row single hidden" id="nationalMethodRow">
+                <div>
+                  <label class="form-label">旧车处理方式</label>
+                  <select id="nationalMethod" class="form-control" onchange="calculate()">
+                    <option value="scrap">报废更新（补贴更高）</option>
+                    <option value="trade">置换更新（转让出售）</option>
+                  </select>
+                  <div id="subsidyInfo" style="margin-top:10px; padding:12px; background:rgba(0,212,170,0.08); border:1px solid rgba(0,212,170,0.15); border-radius:8px; font-size:13px; color:var(--accent);">
+                    报废旧车购买新能源车：补贴车价12%，最高2万元
+                  </div>
+                </div>
+              </div>
+              <div class="form-row single">
+                <div>
+                  <label class="form-label">备注 / 优缺点记录</label>
+                  <textarea id="comment" class="form-control" placeholder="记录这款车的优缺点、试驾感受等..."></textarea>
+                </div>
+              </div>
+            </div>
+            <div class="card">
+              <div class="result-grid">
+                <div class="result-item"><div class="label">裸车价</div><div class="value" id="resCarPrice">0</div></div>
+                <div class="result-item"><div class="label">购置税减免</div><div class="value success" id="resTaxReduction">0</div></div>
+                <div class="result-item"><div class="label">应缴购置税</div><div class="value highlight" id="resTax">0</div></div>
+                <div class="result-item"><div class="label">补贴金额</div><div class="value success" id="resSubsidy">0</div></div>
+              </div>
+              <div class="final-result">
+                <div class="label">最终落地价</div>
+                <div class="value" id="resFinalPrice">0 元</div>
+                <div class="detail" id="resSubsidyDetail">无补贴</div>
+              </div>
+              <div class="btn-group">
+                <button class="btn btn-accent" onclick="saveRecord()"><i class="fa fa-save"></i> 保存到云端</button>
+                <button class="btn btn-secondary" onclick="resetCalculator()"><i class="fa fa-refresh"></i> 清空</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- AI面板 -->
+          <div class="ai-panel" id="aiPanel">
+            <div class="ai-panel-header">
+              <i class="fa fa-magic"></i>
+              <h3>AI 智能建议</h3>
+            </div>
+            <div id="aiEmpty" class="ai-empty"><i class="fa fa-search"></i><p>输入车型名称获取AI智能分析<br><span style="font-size:12px;color:var(--text-muted);">或手动输入后点击下方按钮</span></p><button class="btn btn-accent" onclick="manualAIAnalysis()" style="margin-top:12px;padding:8px 20px;font-size:13px;"><i class="fa fa-magic"></i> 生成 AI 分析</button></div>
+            <div id="aiLoading" class="ai-loading hidden"><div class="spinner"></div><span>AI 分析中...</span></div>
+            <div id="aiError" class="hidden" style="padding:20px;text-align:center;">
+              <i class="fa fa-exclamation-triangle" style="font-size:32px;color:var(--danger);margin-bottom:12px;display:block;"></i>
+              <p style="color:var(--danger);font-size:14px;margin-bottom:8px;" id="aiErrorMsg">分析失败</p>
+              <p style="color:var(--text-muted);font-size:12px;margin-bottom:16px;" id="aiErrorHint">请检查AI模型配置是否正确，或尝试更换模型。</p>
+              <button class="btn btn-accent" onclick="currentCarInfo ? retryAIAnalysis() : manualAIAnalysis()" style="padding:8px 20px;font-size:13px;"><i class="fa fa-refresh"></i> 重试</button>
+            </div>
+            <div id="aiContent" class="hidden">
+              <div id="aiDataDate" class="ai-data-date hidden"></div>
+              <div class="ai-section">
+                <div class="ai-section-title"><i class="fa fa-car"></i> 车型信息</div>
+                <div class="ai-car-info">
+                  <div class="ai-info-item"><div class="label">指导价</div><div class="value" id="aiPrice">-</div></div>
+                  <div class="ai-info-item"><div class="label">级别</div><div class="value" id="aiLevel">-</div></div>
+                  <div class="ai-info-item"><div class="label">能源类型</div><div class="value" id="aiEnergy">-</div></div>
+                  <div class="ai-info-item"><div class="label">品牌</div><div class="value" id="aiBrand">-</div></div>
+                </div>
+              </div>
+              <div class="ai-section">
+                <div class="ai-section-title"><i class="fa fa-check-circle" style="color: var(--success);"></i> 优点</div>
+                <ul class="ai-list" id="aiPros"></ul>
+              </div>
+              <div class="ai-section">
+                <div class="ai-section-title"><i class="fa fa-exclamation-circle" style="color: var(--warning);"></i> 缺点</div>
+                <ul class="ai-list" id="aiCons"></ul>
+              </div>
+              <div class="ai-section">
+                <div class="ai-section-title"><i class="fa fa-gift" style="color: var(--warning);"></i> 当前优惠政策</div>
+                <div id="aiDiscountDisplay" class="ai-discount-box">暂无优惠信息</div>
+                <textarea id="aiDiscountEdit" class="ai-discount-edit hidden" placeholder="编辑优惠政策..."></textarea>
+                <div class="btn-group" style="margin-top: 0;">
+                  <button class="btn btn-success" id="aiEditBtn" onclick="editDiscount()" style="flex:1;"><i class="fa fa-edit"></i> 编辑</button>
+                  <button class="btn btn-accent hidden" id="aiApplyBtn" onclick="applyDiscount()" style="flex:1;"><i class="fa fa-check"></i> 应用</button>
+                  <button class="btn btn-secondary hidden" id="aiCancelBtn" onclick="cancelEditDiscount()" style="flex:1;">取消</button>
+                </div>
+              </div>
+              <div id="aiSources" class="ai-sources hidden"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 记录列表 -->
+      <div id="pageRecords" class="page">
+        <div class="page-header"><h2>对比列表</h2></div>
+        <div class="card">
+          <div class="list-header">
+            <div class="view-toggle">
+              <button class="view-btn active" onclick="switchView('card')"><i class="fa fa-th-large"></i> 卡片</button>
+              <button class="view-btn" onclick="switchView('table')"><i class="fa fa-table"></i> 表格</button>
+            </div>
+            <button class="btn btn-danger" onclick="clearAllRecords()"><i class="fa fa-trash"></i> 清空全部</button>
+          </div>
+          <div id="recordsContainer"><div class="empty-state"><i class="fa fa-inbox"></i><p>暂无对比记录</p></div></div>
+        </div>
+      </div>
+
+      <!-- 设置页 -->
+      <div id="pageSettings" class="page">
+        <div class="page-header"><h2>设置</h2></div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 20px; color: var(--text-primary);">账户信息</h3>
+          <div class="form-row">
+            <div><label class="form-label">用户名</label><input type="text" id="settingsUsername" class="form-control" disabled></div>
+            <div><label class="form-label">注册时间</label><input type="text" id="settingsCreatedAt" class="form-control" disabled></div>
+          </div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 20px; color: var(--text-primary);">默认设置</h3>
+          <div class="form-row">
+            <div>
+              <label class="form-label">默认车辆类型</label>
+              <select id="defaultCarType" class="form-control">
+                <option value="fuel">燃油车</option>
+                <option value="phev">插电混动</option>
+                <option value="ev">纯电动</option>
+              </select>
+            </div>
+          </div>
+          <div class="btn-group"><button class="btn btn-accent" onclick="saveSettings()"><i class="fa fa-save"></i> 保存设置</button></div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 20px; color: var(--text-primary);"><i class="fa fa-magic" style="color: var(--accent); margin-right: 8px;"></i>AI 模型配置</h3>
+          <p class="settings-hint" style="margin-bottom: 20px;">配置 AI 大模型 API，用于车型搜索和智能分析。支持所有兼容 OpenAI Chat Completions 格式的 API。</p>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-server"></i> API 端点</h4>
+            <div class="form-row single">
+              <div>
+                <input type="text" id="aiApiBase" class="form-control" placeholder="https://ark.cn-beijing.volces.com/api/v3">
+                <p class="settings-hint">API 的 Base URL，例如：<br>• 豆包：https://ark.cn-beijing.volces.com/api/v3<br>• OpenAI：https://api.openai.com/v1<br>• DeepSeek：https://api.deepseek.com/v1<br>• 通义千问：https://dashscope.aliyuncs.com/compatible-mode/v1</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-cube"></i> 模型名称</h4>
+            <div class="form-row single">
+              <div>
+                <input type="text" id="aiModel" class="form-control" placeholder="doubao-seed-1.6">
+                <p class="settings-hint">模型标识符，例如：<br>• 豆包：doubao-seed-1.6 / doubao-pro-32k<br>• GPT-4o：gpt-4o<br>• DeepSeek：deepseek-chat<br>• 通义千问：qwen-plus</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-key"></i> API Key</h4>
+            <div class="form-row single">
+              <div>
+                <input type="password" id="aiApiKey" class="form-control" placeholder="sk-xxxxxxxxxxxxxxxx">
+                <p class="settings-hint">你的 API 密钥，仅存储在本地浏览器中，不会上传到服务器。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-chrome"></i> 浏览器联网搜索</h4>
+            <div class="form-row single">
+              <div>
+                <p class="settings-hint" style="color: var(--text-primary);">系统将自动使用浏览器访问以下汽车网站进行实时搜索：</p>
+                <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;">
+                  <span class="settings-hint" style="background: var(--bg-input); padding: 4px 12px; border-radius: 15px; border: 1px solid var(--border);">🚗 汽车之家</span>
+                  <span class="settings-hint" style="background: var(--bg-input); padding: 4px 12px; border-radius: 15px; border: 1px solid var(--border);">🚙 懂车帝</span>
+                  <span class="settings-hint" style="background: var(--bg-input); padding: 4px 12px; border-radius: 15px; border: 1px solid var(--border);">🚕 太平洋汽车</span>
+                  <span class="settings-hint" style="background: var(--bg-input); padding: 4px 12px; border-radius: 15px; border: 1px solid var(--border);">🚘 易车</span>
+                </div>
+                <p class="settings-hint" style="margin-top: 12px; color: var(--text-secondary);">搜索结果将实时获取最新车型信息、评测和优惠政策，无需配置任何 API Key。</p>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-group">
+            <button class="btn btn-accent" onclick="saveAiConfig()"><i class="fa fa-save"></i> 保存 AI 配置</button>
+            <button class="btn btn-secondary" onclick="testAiConnection()"><i class="fa fa-plug"></i> 测试连接</button>
+          </div>
+          <div id="aiConnectionStatus" style="margin-top: 12px;"></div>
+        </div>
+      </div>
+    </main>
+  </div>
+
+  <script>
+    // ========== 配置 ==========
+    const API_BASE_URL = 'http://localhost:3000/api';
+    const DEMO_MODE = true;
+
+    function getAiConfig() {
+      return {
+        baseUrl: localStorage.getItem('aiApiBase') || '',
+        model: localStorage.getItem('aiModel') || '',
+        apiKey: localStorage.getItem('aiApiKey') || ''
+      };
+    }
+
+    // ========== 状态 ==========
+    let currentUser = null;
+    let authMode = 'login';
+    let currentView = 'card';
+    let expandedRecords = new Set();
+    let searchSource = 'local'; // 默认本地数据库
+    let localDb = null; // sql.js 数据库实例
+    let localDbLoading = false;
+    let records = [];
+    let isDemoMode = false;
+    let aiAnalysisCache = {};
+    let currentCarInfo = null;
+    let searchDebounceTimer = null;
+    let isInsuranceManuallySet = false;
+
+    // ========== 初始化 ==========
+    document.addEventListener('DOMContentLoaded', () => {
+      checkAuth();
+      setupEventListeners();
+      const demoUser = localStorage.getItem('demoUser');
+      if (demoUser && DEMO_MODE) {
+        isDemoMode = true;
+        currentUser = JSON.parse(demoUser);
+        const demoRecords = localStorage.getItem('demoRecords');
+        if (demoRecords) records = JSON.parse(demoRecords);
+        showApp();
+      }
+      loadAiConfigToForm();
+    });
+
+    function loadAiConfigToForm() {
+      const cfg = getAiConfig();
+      document.getElementById('aiApiBase').value = cfg.baseUrl;
+      document.getElementById('aiModel').value = cfg.model;
+      document.getElementById('aiApiKey').value = cfg.apiKey;
+    }
+
+    function setupEventListeners() {
+      document.getElementById('authForm').addEventListener('submit', handleAuth);
+      document.getElementById('authSwitchLink').addEventListener('click', toggleAuthMode);
+      document.querySelectorAll('.nav-item').forEach(item => item.addEventListener('click', () => navigateTo(item.dataset.page)));
+      // 计算器输入事件：先预估保险，再计算（排除保险输入框，避免循环）
+      document.querySelectorAll('#pageCalculator input, #pageCalculator select').forEach(el => {
+        if (el.id !== 'insurance') {
+          el.addEventListener('input', () => {
+            autoEstimateInsurance();
+            calculate();
+          });
+        } else {
+          el.addEventListener('input', calculate);
+        }
+      });
+      // 车辆类型切换时强制重新预估保险
+      document.getElementById('carType').addEventListener('change', () => {
+        autoEstimateInsurance(true);
+        calculate();
+      });
+      // 当用户手动修改保险值时，标记为手动设置
+      document.getElementById('insurance').addEventListener('focus', () => {
+        isInsuranceManuallySet = true;
+      });
+      document.getElementById('carName').addEventListener('input', (e) => {
+        clearTimeout(searchDebounceTimer);
+        searchDebounceTimer = setTimeout(() => searchCars(e.target.value), 500);
+      });
+      document.addEventListener('click', (e) => {
+        if (!document.querySelector('.car-search-container').contains(e.target))
+          document.getElementById('carSearchDropdown').classList.remove('show');
+      });
+    }
+
+    // ========== AI 配置管理 ==========
+    function saveAiConfig() {
+      const baseUrl = document.getElementById('aiApiBase').value.trim();
+      const model = document.getElementById('aiModel').value.trim();
+      const apiKey = document.getElementById('aiApiKey').value.trim();
+      localStorage.setItem('aiApiBase', baseUrl);
+      localStorage.setItem('aiModel', model);
+      localStorage.setItem('aiApiKey', apiKey);
+      localStorage.removeItem('aiWebSearch');
+      localStorage.removeItem('bingSearchKey');
+      // 清理旧的 Tavily 配置
+      localStorage.removeItem('tavilyApiKey');
+      localStorage.removeItem('tavilySearchDepth');
+      localStorage.removeItem('tavilyMaxResults');
+      localStorage.removeItem('tavilyTimeRange');
+      showToast('AI 配置已保存', 'success');
+    }
+
+    async function testAiConnection() {
+      const cfg = getAiConfig();
+      if (!cfg.baseUrl || !cfg.model || !cfg.apiKey) {
+        showToast('请先填写完整的 API 配置', 'error');
+        return;
+      }
+      const statusEl = document.getElementById('aiConnectionStatus');
+      statusEl.innerHTML = '<span class="api-status disconnected"><i class="fa fa-spinner fa-spin"></i> 正在测试连接...</span>';
+
+      try {
+        const baseUrl = cfg.baseUrl.replace(/\/+$/, '');
+        const res = await fetch(`${baseUrl}/chat/completions`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${cfg.apiKey}` },
+          body: JSON.stringify({
+            model: cfg.model,
+            messages: [{ role: 'user', content: '请回复"连接成功"四个字' }],
+            max_tokens: 20
+          })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          const reply = data.choices?.[0]?.message?.content || '';
+          statusEl.innerHTML = `<span class="api-status connected"><i class="fa fa-check-circle"></i> 连接成功！模型回复：${reply}</span>`;
+        } else {
+          const err = await res.text();
+          statusEl.innerHTML = `<span class="api-status disconnected"><i class="fa fa-times-circle"></i> 连接失败 (${res.status}): ${err.substring(0, 100)}</span>`;
+        }
+      } catch (err) {
+        statusEl.innerHTML = `<span class="api-status disconnected"><i class="fa fa-times-circle"></i> 连接失败: ${err.message}</span>`;
+      }
+    }
+
+    // ========== 后端搜索 ==========
+    async function backendSearch(keyword, type = 'all') {
+      try {
+        const res = await fetch(`${API_BASE_URL}/search`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ keyword, type })
+        });
+        const data = await res.json();
+        if (!data.success) throw new Error(data.error || '搜索失败');
+        return data;
+      } catch (err) {
+        console.warn('后端搜索失败:', err.message);
+        return null;
+      }
+    }
+
+    // ========== JSON 提取工具 ==========
+    function extractJSON(text) {
+      if (!text || typeof text !== 'string') return null;
+      text = text.trim();
+      try { return JSON.parse(text); } catch (e) {}
+      const codeBlockMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/);
+      if (codeBlockMatch) { try { return JSON.parse(codeBlockMatch[1].trim()); } catch (e) {} }
+      const braceMatch = text.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
+      if (braceMatch) { try { return JSON.parse(braceMatch[1]); } catch (e) {} }
+      return null;
+    }
+
+    // ========== AI API 调用 ==========
+    async function callAI(messages, temperature = 0.3) {
+      const cfg = getAiConfig();
+      if (!cfg.baseUrl || !cfg.model || !cfg.apiKey) {
+        throw new Error('请先在设置中配置 AI 模型（API端点、模型名称、API Key）');
+      }
+      const baseUrl = cfg.baseUrl.replace(/\/+$/, '');
+      const response = await fetch(`${baseUrl}/chat/completions`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${cfg.apiKey}` },
+        body: JSON.stringify({ model: cfg.model, messages, temperature })
+      });
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`API请求失败 (${response.status}): ${errText.substring(0, 200)}`);
+      }
+      const data = await response.json();
+      if (!data.choices || data.choices.length === 0) {
+        throw new Error('AI 模型未返回有效回复（choices 为空）');
+      }
+      return data.choices[0].message?.content || '';
+    }
+
+    // ========== 本地数据库搜索 ==========
+    async function loadLocalDb() {
+      if (localDb) return localDb;
+      if (localDbLoading) return null;
+      localDbLoading = true;
+      try {
+        const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}` });
+        // 尝试从后端加载
+        try {
+          const response = await fetch(`${API_BASE_URL}/car-db`);
+          if (response.ok) {
+            const buffer = await response.arrayBuffer();
+            localDb = new SQL.Database(new Uint8Array(buffer));
+            return localDb;
+          }
+        } catch (fetchErr) {
+          console.warn('后端数据库加载失败，等待用户手动上传:', fetchErr.message);
+        }
+        // 后端不可用，提示用户上传
+        return null;
+      } catch (err) {
+        console.error('初始化本地数据库失败:', err);
+        return null;
+      } finally {
+        localDbLoading = false;
+      }
+    }
+
+    // 用户手动上传 .db 文件
+    async function handleDbUpload(file) {
+      try {
+        const SQL = await initSqlJs({ locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${f}` });
+        const buffer = await file.arrayBuffer();
+        localDb = new SQL.Database(new Uint8Array(buffer));
+        showToast('本地数据库加载成功！', 'success');
+        // 自动搜索当前输入
+        const keyword = document.getElementById('carName').value.trim();
+        if (keyword) searchCars(keyword);
+      } catch (err) {
+        showToast('数据库文件格式错误: ' + err.message, 'error');
+      }
+    }
+
+    function searchLocalDb(keyword) {
+      if (!localDb) return [];
+      // 多关键词模糊搜索：空格分隔，每个关键词都要匹配
+      const keywords = keyword.trim().split(/\s+/).filter(Boolean);
+      if (keywords.length === 0) return [];
+
+      // 构建动态 SQL：每个关键词都要在任意搜索字段中匹配
+      const searchFields = ['model_name', 'series_name', 'brand', 'vehicle_level', 'body_structure', 'energy_type'];
+      let sql = "SELECT model_name, series_name, brand, official_price, energy_type, vehicle_level, body_structure FROM car_models WHERE ";
+      const params = [];
+      const conditions = [];
+      for (const kw of keywords) {
+        const fieldConditions = searchFields.map(f => `${f} LIKE ?`);
+        conditions.push(`(${fieldConditions.join(' OR ')})`);
+        const kwPattern = `%${kw}%`;
+        for (let i = 0; i < searchFields.length; i++) params.push(kwPattern);
+      }
+      sql += conditions.join(' AND ');
+      sql += " LIMIT 20";
+
+      const results = localDb.exec(sql, params);
+      if (!results.length || !results[0].values.length) return [];
+      const cols = results[0].columns;
+      return results[0].values.map(row => {
+        const obj = {};
+        cols.forEach((c, i) => obj[c] = row[i]);
+        return {
+          name: [obj.brand, obj.series_name, obj.model_name].filter(Boolean).join(' '),
+          price: parseCarPrice(obj.official_price),
+          level: obj.vehicle_level || '未知',
+          energy: obj.energy_type || '燃油',
+          body: obj.body_structure || '',
+          source: '本地数据库'
+        };
+      });
+    }
+
+    function setSearchSource(source) {
+      searchSource = source;
+      document.querySelectorAll('.search-src-btn').forEach(btn => {
+        btn.classList.toggle('active', btn.dataset.source === source);
+      });
+      const keyword = document.getElementById('carName').value.trim();
+      if (keyword.length >= 1) searchCars(keyword);
+    }
+
+    // ========== 车型搜索（后端浏览器爬取 + AI） ==========
+    async function searchCars(keyword) {
+      if (!keyword || keyword.length < (searchSource === 'local' ? 1 : 2)) { document.getElementById('carSearchDropdown').classList.remove('show'); return; }
+      const dropdown = document.getElementById('carSearchDropdown');
+
+      // 本地数据库搜索
+      if (searchSource === 'local') {
+        dropdown.innerHTML = '<div class="car-search-loading"><span class="spinner"></span>正在搜索本地数据库...</div>';
+        dropdown.classList.add('show');
+        try {
+          const db = await loadLocalDb();
+          if (!db) {
+            dropdown.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-muted);">
+              <i class="fa fa-database" style="font-size:24px;display:block;margin-bottom:8px;"></i>
+              本地数据库未加载<br><span style="font-size:12px;">请上传车型数据库文件 (.db)</span>
+              <label style="display:inline-block;margin-top:10px;padding:6px 16px;background:var(--accent);color:#fff;border-radius:6px;cursor:pointer;font-size:12px;">
+                <i class="fa fa-upload"></i> 选择数据库文件
+                <input type="file" accept=".db,.sqlite,.sqlite3" style="display:none;" onchange="handleDbUpload(this.files[0])">
+              </label>
+            </div>`;
+            return;
+          }
+          const results = searchLocalDb(keyword);
+          if (results.length > 0) {
+            renderCarSearchResults(results);
+          } else {
+            dropdown.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">本地库未找到匹配车型<br><span style="font-size:12px;">试试其他关键词或切换到 AI 搜索</span></div>';
+          }
+        } catch (err) {
+          dropdown.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">搜索出错: ' + err.message + '</div>';
+        }
+        return;
+      }
+
+      // AI 搜索（原有逻辑）
+      dropdown.innerHTML = '<div class="car-search-loading"><span class="spinner"></span>正在搜索车型...</div>';
+      dropdown.classList.add('show');
+      try {
+        const cacheKey = `search_${keyword}_${new Date().toDateString()}`;
+        if (aiAnalysisCache[cacheKey]) { renderCarSearchResults(aiAnalysisCache[cacheKey]); return; }
+
+        let webContext = '';
+        let searchUsed = false;
+        let latestDate = new Date().toISOString().split('T')[0];
+
+        try {
+          const searchResult = await backendSearch(keyword, 'all');
+          if (searchResult && searchResult.results && searchResult.results.length > 0) {
+            webContext = searchResult.results
+              .filter(r => r.success)
+              .map((r, i) => `[来源${i+1} - ${r.site}]\n${r.snippet}\n链接: ${r.url}`)
+              .join('\n\n');
+            if (webContext) searchUsed = true;
+          }
+        } catch (searchErr) {
+          console.warn('后端搜索失败，回退到纯AI模式:', searchErr.message);
+        }
+
+        let systemPrompt, userPrompt;
+        if (searchUsed) {
+          systemPrompt = `你是一个汽车专家。根据以下从汽车网站获取的最新信息，返回匹配的车型列表（最多5个），包含车型名称、指导价（数字，单位元）、级别、能源类型（纯电动/插电混动/燃油）。
+
+只返回JSON数组格式：[{"name":"车型名称","price":263500,"level":"中型SUV","energy":"纯电动"}]
+
+以下是汽车网站最新信息：
+${webContext}`;
+          userPrompt = `根据以上信息，搜索车型: ${keyword}`;
+        } else {
+          systemPrompt = '你是一个汽车专家。根据用户输入的车型名称，返回匹配的车型列表（最多5个），包含车型名称、指导价（数字，单位元）、级别、能源类型（纯电动/插电混动/燃油）。只返回JSON数组格式：[{"name":"车型名称","price":263500,"level":"中型SUV","energy":"纯电动"}]';
+          userPrompt = `搜索车型: ${keyword}`;
+        }
+
+        const content = await callAI([
+          { role: 'system', content: systemPrompt },
+          { role: 'user', content: userPrompt }
+        ], 0.3);
+        const cars = extractJSON(content);
+        if (!cars || !Array.isArray(cars) || cars.length === 0) {
+          dropdown.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">未找到匹配车型，请尝试其他关键词</div>';
+          return;
+        }
+        aiAnalysisCache[cacheKey] = cars;
+        renderCarSearchResults(cars);
+      } catch (err) {
+        dropdown.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-muted);"><i class="fa fa-exclamation-circle" style="font-size:24px;margin-bottom:8px;display:block;"></i>${err.message || '搜索失败'}</div>`;
+      }
+    }
+
+    function renderCarSearchResults(cars) {
+      const dropdown = document.getElementById('carSearchDropdown');
+      if (!cars || cars.length === 0) { dropdown.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">未找到匹配车型</div>'; return; }
+      dropdown.innerHTML = cars.map(car => `
+        <div class="car-search-item" onclick="selectCar('${encodeURIComponent(JSON.stringify(car))}')">
+          <div class="name">${car.name}${car.updateTime ? ` <small style="color:var(--text-muted);font-weight:normal;">(${car.updateTime})</small>` : ''}</div>
+          <div class="info">${car.level} · ${car.energy} · 指导价 ${formatNumber(car.price)}元${car.source ? ` <span style="color:var(--accent);">· ${car.source}</span>` : ''}</div>
+        </div>
+      `).join('');
+    }
+
+    function selectCar(carJson) {
+      const car = JSON.parse(decodeURIComponent(carJson));
+      currentCarInfo = car;
+      document.getElementById('carName').value = car.name;
+      document.getElementById('originalPrice').value = car.price;
+      let carType = 'fuel';
+      if (car.energy.includes('纯电动')) carType = 'ev';
+      else if (car.energy.includes('插电混动') || car.energy.includes('混动')) carType = 'phev';
+      document.getElementById('carType').value = carType;
+      document.getElementById('carSearchDropdown').classList.remove('show');
+      isInsuranceManuallySet = false; // 重置手动标记
+      autoEstimateInsurance(true);
+      getAIAnalysis(car);
+    }
+
+    // ========== AI 分析（后端浏览器爬取 + AI） ==========
+    async function getAIAnalysis(car) {
+      const aiEmpty = document.getElementById('aiEmpty');
+      const aiContent = document.getElementById('aiContent');
+      const aiLoading = document.getElementById('aiLoading');
+      const aiError = document.getElementById('aiError');
+      aiEmpty.classList.add('hidden');
+      aiContent.classList.add('hidden');
+      if (aiError) aiError.classList.add('hidden');
+      aiLoading.classList.remove('hidden');
+      aiLoading.querySelector('span').textContent = '正在搜索...';
+
+      try {
+        const cacheKey = `analysis_${car.name}_${new Date().toDateString()}`;
+        let analysis = null;
+        let searchSources = [];
+        const cached = aiAnalysisCache[cacheKey];
+        if (cached) {
+          analysis = cached.analysis;
+          searchSources = cached.searchSources || [];
+        }
+        if (!analysis) {
+          const today = new Date().toISOString().split('T')[0];
+
+          // 第一步：后端浏览器爬取
+          let webContext = '';
+          let searchUsed = false;
+          let latestDate = today;
+          let searchSources = [];
+          try {
+            aiLoading.querySelector('span').textContent = '正在搜索评测和优惠...';
+            const [prosResult, discountResult] = await Promise.all([
+              backendSearch(`${car.name} 优缺点 评测`, 'pros-cons'),
+              backendSearch(`${car.name} 优惠政策 降价`, 'discount')
+            ]);
+
+            const allSnippets = [];
+            searchSources = []; // 重置搜索来源
+            [prosResult, discountResult].forEach((result, idx) => {
+              if (result && result.results) {
+                result.results.filter(r => r.success).forEach(r => {
+                  allSnippets.push(`[${r.site}]\n${r.snippet}\n链接: ${r.url}`);
+                  searchSources.push({ site: r.site, url: r.url, snippet: r.snippet });
+                });
+              }
+            });
+
+            if (allSnippets.length > 0) {
+              webContext = allSnippets.join('\n\n');
+              searchUsed = true;
+              latestDate = today;
+            }
+          } catch (searchErr) {
+            console.warn('后端搜索失败，回退到纯AI模式:', searchErr.message);
+          }
+
+          // 第二步：AI 分析
+          aiLoading.querySelector('span').textContent = 'AI 分析中...';
+          let systemPrompt, userPrompt;
+
+          if (searchUsed) {
+            systemPrompt = `你是一个专业的汽车评测专家。请根据以下从汽车网站获取的最新信息，分析指定车型的优缺点和当前市场优惠政策。
+
+要求：
+1. 优缺点必须基于网站真实信息，不要编造
+2. 优惠政策要包含具体金额或折扣比例
+3. 数据日期：${latestDate}
+
+只返回JSON格式：
+{"pros":["优点1","优点2"],"cons":["缺点1","缺点2"],"discounts":"优惠政策描述","brand":"品牌名称","dataDate":"${latestDate}","searchUsed":true}
+
+以下是汽车网站最新信息：
+${webContext}`;
+            userPrompt = `根据以上信息，分析车型: ${car.name}，指导价: ${car.price}元，级别: ${car.level}，能源类型: ${car.energy}`;
+          } else {
+            systemPrompt = `你是一个专业的汽车评测专家。请分析指定车型的优缺点和当前市场优惠政策。注意：当前未联网，请基于你的知识分析。
+
+只返回JSON格式：
+{"pros":["优点1","优点2"],"cons":["缺点1","缺点2"],"discounts":"优惠政策描述","brand":"品牌名称","dataDate":"","source":"","searchUsed":false}`;
+            userPrompt = `分析车型: ${car.name}，指导价: ${car.price}元，级别: ${car.level}，能源类型: ${car.energy}`;
+          }
+
+          const content = await callAI([
+            { role: 'system', content: systemPrompt },
+            { role: 'user', content: userPrompt }
+          ], 0.7);
+
+          analysis = extractJSON(content);
+          if (!analysis) {
+            throw new Error('AI 返回的数据格式异常，无法解析分析结果。请重试或更换模型。');
+          }
+          if (!Array.isArray(analysis.pros)) analysis.pros = [];
+          if (!Array.isArray(analysis.cons)) analysis.cons = [];
+          aiAnalysisCache[cacheKey] = { analysis, searchSources };
+        }
+
+        // 渲染结果
+        document.getElementById('aiPrice').textContent = formatNumber(car.price) + '元';
+        document.getElementById('aiLevel').textContent = car.level;
+        document.getElementById('aiEnergy').textContent = car.energy;
+        document.getElementById('aiBrand').textContent = analysis.brand || car.name.split(' ')[0];
+        document.getElementById('aiPros').innerHTML = analysis.pros.map(p => `<li><i class="fa fa-check" style="color:var(--success);"></i>${p}</li>`).join('');
+        document.getElementById('aiCons').innerHTML = analysis.cons.map(c => `<li><i class="fa fa-exclamation-triangle" style="color:var(--warning);"></i>${c}</li>`).join('');
+        document.getElementById('aiDiscountDisplay').textContent = analysis.discounts || '暂无优惠信息';
+        document.getElementById('aiDiscountEdit').value = analysis.discounts || '';
+
+        // 显示数据日期和来源
+        const dateInfo = document.getElementById('aiDataDate');
+        if (analysis.searchUsed && analysis.dataDate) {
+          dateInfo.innerHTML = `<i class="fa fa-clock-o"></i> 数据日期：${analysis.dataDate} <span class="ai-live-badge"><i class="fa fa-chrome"></i> 浏览器搜索</span>`;
+        } else {
+          dateInfo.innerHTML = `<i class="fa fa-clock-o"></i> <span style="color:var(--warning);">未联网，数据可能非最新</span>`;
+        }
+        dateInfo.classList.remove('hidden');
+
+        // 显示参考来源
+        const sourcesEl = document.getElementById('aiSources');
+        if (searchSources.length > 0) {
+          const uniqueSources = [];
+          const seenUrls = new Set();
+          searchSources.forEach(s => {
+            if (!seenUrls.has(s.url)) {
+              seenUrls.add(s.url);
+              uniqueSources.push(s);
+            }
+          });
+          sourcesEl.innerHTML = `
+            <div class="ai-source-title"><i class="fa fa-link"></i> 参考来源（${uniqueSources.length}）</div>
+            ${uniqueSources.map(s => `<a class="ai-source-link" href="${s.url}" target="_blank" rel="noopener">[${s.site}] ${s.snippet.length > 80 ? s.snippet.substring(0, 80) + '...' : s.snippet}</a>`).join('')}
+          `;
+          sourcesEl.classList.remove('hidden');
+        } else {
+          sourcesEl.classList.add('hidden');
+        }
+
+        aiLoading.classList.add('hidden');
+        aiContent.classList.remove('hidden');
+        if (aiError) aiError.classList.add('hidden');
+        currentCarInfo.aiAnalysis = analysis;
+      } catch (err) {
+        aiLoading.classList.add('hidden');
+        aiContent.classList.add('hidden');
+        showAIError(err.message);
+      }
+    }
+
+    function showAIError(message) {
+      const aiError = document.getElementById('aiError');
+      const aiEmpty = document.getElementById('aiEmpty');
+      const aiContent = document.getElementById('aiContent');
+      aiEmpty.classList.add('hidden');
+      aiContent.classList.add('hidden');
+      document.getElementById('aiErrorMsg').textContent = message || '分析失败';
+      let hint = '请检查AI模型配置是否正确，或尝试更换模型。';
+      if (message && message.includes('请先在设置中配置')) {
+        hint = '请前往"设置"页面配置 AI 模型的 API 端点、模型名称和 API Key。';
+      } else if (message && message.includes('数据格式异常')) {
+        hint = '当前模型返回的结果格式不正确，建议更换模型或重试。';
+      } else if (message && message.includes('API请求失败')) {
+        hint = 'API 请求出错，请检查网络连接和 API 配置。';
+      }
+      document.getElementById('aiErrorHint').textContent = hint;
+      aiError.classList.remove('hidden');
+    }
+
+    function retryAIAnalysis() {
+      if (currentCarInfo) getAIAnalysis(currentCarInfo);
+    }
+
+    function manualAIAnalysis() {
+      const carName = document.getElementById('carName').value.trim();
+      if (!carName) {
+        showAIError('请先输入车辆名称');
+        document.getElementById('aiErrorHint').textContent = '在上方"车辆名称/型号"输入框中填写车型名称后，再点击生成。';
+        return;
+      }
+      const price = parseFloat(document.getElementById('originalPrice').value) || 0;
+      const carType = document.getElementById('carType').value;
+      let energy = '燃油';
+      if (carType === 'ev') energy = '纯电动';
+      else if (carType === 'phev') energy = '插电混动';
+
+      const car = {
+        name: carName,
+        price: price,
+        level: '未知',
+        energy: energy,
+        source: '手动输入'
+      };
+      currentCarInfo = car;
+      getAIAnalysis(car);
+    }
+
+    function editDiscount() {
+      document.getElementById('aiDiscountDisplay').classList.add('hidden');
+      document.getElementById('aiDiscountEdit').classList.remove('hidden');
+      document.getElementById('aiEditBtn').classList.add('hidden');
+      document.getElementById('aiApplyBtn').classList.remove('hidden');
+      document.getElementById('aiCancelBtn').classList.remove('hidden');
+    }
+    function applyDiscount() {
+      const v = document.getElementById('aiDiscountEdit').value;
+      document.getElementById('aiDiscountDisplay').textContent = v;
+      if (currentCarInfo?.aiAnalysis) currentCarInfo.aiAnalysis.userDiscounts = v;
+      cancelEditDiscount();
+      showToast('优惠政策已更新', 'success');
+    }
+    function cancelEditDiscount() {
+      document.getElementById('aiDiscountDisplay').classList.remove('hidden');
+      document.getElementById('aiDiscountEdit').classList.add('hidden');
+      document.getElementById('aiEditBtn').classList.remove('hidden');
+      document.getElementById('aiApplyBtn').classList.add('hidden');
+      document.getElementById('aiCancelBtn').classList.add('hidden');
+    }
+
+    // ========== 认证 ==========
+    async function checkAuth() {
+      const token = localStorage.getItem('token');
+      if (!token) { showAuthPage(); return; }
+      try {
+        const res = await fetch(`${API_BASE_URL}/auth/me`, { headers: { 'Authorization': `Bearer ${token}` } });
+        const data = await res.json();
+        if (data.success) { currentUser = data.data; showApp(); } else { showAuthPage(); }
+      } catch (e) { showAuthPage(); }
+    }
+
+    async function handleAuth(e) {
+      e.preventDefault();
+      const username = document.getElementById('authUsername').value.trim();
+      const password = document.getElementById('authPassword').value;
+      const btn = document.getElementById('authBtn');
+      const btnText = document.getElementById('authBtnText');
+      const errorEl = document.getElementById('authError');
+      btn.disabled = true; btnText.innerHTML = '<span class="loading"></span>'; errorEl.style.display = 'none';
+      try {
+        const endpoint = authMode === 'login' ? '/auth/login' : '/auth/register';
+        const res = await fetch(`${API_BASE_URL}${endpoint}`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ username, password }) });
+        const data = await res.json();
+        if (data.success) { localStorage.setItem('token', data.data.token); currentUser = data.data.user; showApp(); showToast(authMode === 'login' ? '登录成功' : '注册成功', 'success'); }
+        else { errorEl.textContent = data.error; errorEl.style.display = 'block'; }
+      } catch (err) { errorEl.textContent = '网络错误'; errorEl.style.display = 'block'; }
+      finally { btn.disabled = false; btnText.textContent = authMode === 'login' ? '登录' : '注册'; }
+    }
+
+    function toggleAuthMode() {
+      authMode = authMode === 'login' ? 'register' : 'login';
+      document.getElementById('authSubtitle').textContent = authMode === 'login' ? '登录您的账户' : '创建新账户';
+      document.getElementById('authBtnText').textContent = authMode === 'login' ? '登录' : '注册';
+      document.getElementById('authSwitchText').textContent = authMode === 'login' ? '还没有账户？' : '已有账户？';
+      document.getElementById('authSwitchLink').textContent = authMode === 'login' ? '立即注册' : '立即登录';
+      document.getElementById('authError').style.display = 'none';
+    }
+
+    function demoLogin() {
+      if (!DEMO_MODE) { showToast('演示模式已关闭', 'error'); return; }
+      isDemoMode = true;
+      currentUser = { _id: 'demo-user-001', username: 'demo', createdAt: new Date().toISOString(), settings: { defaultCarType: 'fuel' } };
+      const savedRecords = localStorage.getItem('demoRecords');
+      if (savedRecords) { records = JSON.parse(savedRecords); }
+      else {
+        records = [
+          { _id: 'demo-001', carName: '特斯拉 Model Y 2026款', carType: 'ev', originalPrice: 263500, discount: 0, carPrice: 263500, insurance: 8000, tax: 0, taxReduction: 0, extraFee: 500, extraDiscount: 0, subsidyCategory: 'national', subsidyMethod: 'scrap', subsidyAmount: 20000, subsidyName: '国家报废补贴→新能源', finalPrice: 252000, comment: '试驾感受：加速很快，空间宽敞。', createdAt: new Date(Date.now() - 86400000).toISOString(), aiAnalysis: { pros: ['续航长', '智能化程度高', '品牌力强'], cons: ['价格偏高', '内饰简约'], discounts: '现金优惠1万，置换补贴最高2万' } },
+          { _id: 'demo-002', carName: '比亚迪 汉 DM-i', carType: 'phev', originalPrice: 189800, discount: 10000, carPrice: 179800, insurance: 6000, tax: 0, taxReduction: 7956, extraFee: 500, extraDiscount: 0, subsidyCategory: 'suzhou', subsidyMethod: null, subsidyAmount: 4000, subsidyName: '苏州购新补贴', finalPrice: 179300, comment: '性价比高，油耗低。', createdAt: new Date(Date.now() - 172800000).toISOString(), aiAnalysis: { pros: ['性价比高', '油耗低', '内饰做工好'], cons: ['品牌力一般', '保值率待观察'], discounts: '现金优惠5000，金融贴息' } }
+        ];
+        localStorage.setItem('demoRecords', JSON.stringify(records));
+      }
+      localStorage.setItem('demoUser', JSON.stringify(currentUser));
+      showApp();
+      showToast('演示模式登录成功', 'success');
+    }
+
+    function logout() { localStorage.removeItem('token'); localStorage.removeItem('demoUser'); localStorage.removeItem('demoRecords'); currentUser = null; isDemoMode = false; records = []; showAuthPage(); showToast('已退出登录', 'success'); }
+    function showAuthPage() { document.getElementById('authPage').style.display = 'flex'; document.getElementById('appContainer').classList.remove('show'); }
+    function showApp() {
+      document.getElementById('authPage').style.display = 'none'; document.getElementById('appContainer').classList.add('show');
+      document.getElementById('userName').textContent = currentUser.username;
+      document.getElementById('userAvatar').textContent = currentUser.username.charAt(0).toUpperCase();
+      document.getElementById('welcomeName').textContent = currentUser.username;
+      loadDashboard(); loadRecords();
+      if (currentUser.settings?.defaultCarType) { document.getElementById('carType').value = currentUser.settings.defaultCarType; document.getElementById('defaultCarType').value = currentUser.settings.defaultCarType; }
+      document.getElementById('settingsUsername').value = currentUser.username;
+      document.getElementById('settingsCreatedAt').value = new Date(currentUser.createdAt).toLocaleDateString();
+    }
+
+    function navigateTo(page) {
+      document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+      document.querySelector(`.nav-item[data-page="${page}"]`).classList.add('active');
+      document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
+      document.getElementById(`page${page.charAt(0).toUpperCase() + page.slice(1)}`).classList.add('active');
+      if (page === 'dashboard') loadDashboard();
+      if (page === 'records') loadRecords();
+      if (page === 'settings') loadAiConfigToForm();
+    }
+
+    // ========== 价格解析工具 ==========
+    function parseCarPrice(priceStr) {
+      if (!priceStr) return 0;
+      const s = String(priceStr).trim();
+      // 匹配数字（含小数），如 "23.99万" "23.99" "23万"
+      const m = s.match(/([\d.]+)/);
+      if (!m) return 0;
+      const num = parseFloat(m[1]);
+      if (isNaN(num)) return 0;
+      // 如果含"万"字，转换为元；否则假设已经是万元单位（汽车之家API格式）
+      if (s.includes('万')) return Math.round(num * 10000);
+      // 纯数字且大于100，可能是元；否则可能是万元
+      if (num > 100) return Math.round(num);
+      return Math.round(num * 10000);
+    }
+
+    // ========== 保险费用预估 ==========
+    function estimateInsurance(carPrice, carType) {
+      // 交强险：固定费用
+      const compulsoryInsurance = carType === 'fuel' ? 950 : carType === 'phev' ? 950 : 0; // 纯电免交强险
+      
+      // 商业险预估（根据裸车价计算）
+      let commercialInsurance = 0;
+      if (carPrice > 0) {
+        // 车损险：约车价的2.5%-3%
+        const vehicleDamage = carPrice * 0.028;
+        // 第三者责任险（200万）：约800-1500
+        const thirdParty = 1200;
+        // 盗抢险：约车价的0.5%
+        const theft = carPrice * 0.005;
+        // 车上人员责任险：约200-400
+        const passenger = 300;
+        // 不计免赔：约商业险的15%
+        const deductible = (vehicleDamage + thirdParty + theft + passenger) * 0.15;
+        
+        commercialInsurance = vehicleDamage + thirdParty + theft + passenger + deductible;
+      }
+      
+      return Math.round(compulsoryInsurance + commercialInsurance);
+    }
+
+    function autoEstimateInsurance(force = false) {
+      const original = parseFloat(document.getElementById('originalPrice').value) || 0;
+      const discount = parseFloat(document.getElementById('discount').value) || 0;
+      const carPrice = Math.max(0, original - discount);
+      const carType = document.getElementById('carType').value;
+
+      // 只有满足以下条件时才预估：
+      // 1. 裸车价大于0
+      // 2. 保险未被用户手动设置过，或者是强制重新预估（如切换车辆类型）
+      if (carPrice > 0 && (!isInsuranceManuallySet || force)) {
+        const estimated = estimateInsurance(carPrice, carType);
+        document.getElementById('insurance').value = estimated;
+        calculate();
+      }
+    }
+
+    // ========== 计算器 ==========
+    function onSubsidyChange() {
+      const category = document.getElementById('subsidyCategory').value;
+      document.getElementById('nationalMethodRow').classList.toggle('hidden', category !== 'national');
+      if (category === 'national') updateSubsidyInfo();
+      calculate();
+    }
+
+    function updateSubsidyInfo() {
+      const method = document.getElementById('nationalMethod').value;
+      const isEv = document.getElementById('carType').value !== 'fuel';
+      document.getElementById('subsidyInfo').textContent = method === 'scrap'
+        ? (isEv ? '报废旧车购买新能源车：补贴车价12%，最高2万元' : '报废旧车购买燃油车：补贴车价10%，最高1.5万元')
+        : (isEv ? '转让旧车购买新能源车：补贴车价8%，最高1.5万元' : '转让旧车购买燃油车：补贴车价6%，最高1.3万元');
+    }
+
+    function calculate() {
+      const original = parseFloat(document.getElementById('originalPrice').value) || 0;
+      const discount = parseFloat(document.getElementById('discount').value) || 0;
+      const insurance = parseFloat(document.getElementById('insurance').value) || 0;
+      const extraFee = parseFloat(document.getElementById('extraFee').value) || 0;
+      const extraDiscount = parseFloat(document.getElementById('extraDiscount').value) || 0;
+      const carType = document.getElementById('carType').value;
+      const subsidyCategory = document.getElementById('subsidyCategory').value;
+      const carPrice = Math.max(0, original - discount);
+      const taxBase = carPrice / 1.13;
+      const fullTax = Math.round(taxBase * 0.1);
+      let taxReduction = 0, tax = 0;
+      if (carType === 'fuel') { tax = fullTax; } else { taxReduction = Math.min(Math.round(fullTax * 0.5), 15000); tax = fullTax - taxReduction; }
+      let subsidyAmount = 0, subsidyDetail = '无补贴';
+      if (subsidyCategory === 'national') {
+        const method = document.getElementById('nationalMethod').value;
+        const isEv = carType !== 'fuel';
+        updateSubsidyInfo();
+        if (method === 'scrap') { subsidyAmount = Math.min(Math.round(carPrice * (isEv ? 0.12 : 0.10)), isEv ? 20000 : 15000); subsidyDetail = `国家报废补贴（${isEv ? '新能源' : '燃油'}）：${formatNumber(subsidyAmount)}元`; }
+        else { subsidyAmount = Math.min(Math.round(carPrice * (isEv ? 0.08 : 0.06)), isEv ? 15000 : 13000); subsidyDetail = `国家置换补贴（${isEv ? '新能源' : '燃油'}）：${formatNumber(subsidyAmount)}元`; }
+      } else if (subsidyCategory === 'suzhou') {
+        if (carType === 'fuel') { if (carPrice >= 50000 && carPrice < 100000) subsidyAmount = 1000; else if (carPrice >= 100000 && carPrice < 200000) subsidyAmount = 3000; else if (carPrice >= 200000 && carPrice < 400000) subsidyAmount = 5000; else if (carPrice >= 400000) subsidyAmount = 6000; }
+        else { if (carPrice >= 50000 && carPrice < 100000) subsidyAmount = 2000; else if (carPrice >= 100000 && carPrice < 200000) subsidyAmount = 4000; else if (carPrice >= 200000 && carPrice < 400000) subsidyAmount = 6000; else if (carPrice >= 400000) subsidyAmount = 7000; }
+        subsidyDetail = subsidyAmount > 0 ? `苏州购新补贴（${carType === 'fuel' ? '燃油' : '新能源'}）：${formatNumber(subsidyAmount)}元` : '苏州购新补贴：车价不足5万，无补贴';
+      }
+      const finalPrice = Math.max(0, carPrice + insurance + tax + extraFee - extraDiscount - subsidyAmount);
+      document.getElementById('resCarPrice').textContent = formatNumber(carPrice);
+      document.getElementById('resTaxReduction').textContent = formatNumber(taxReduction);
+      document.getElementById('resTax').textContent = formatNumber(tax);
+      document.getElementById('resSubsidy').textContent = formatNumber(subsidyAmount);
+      document.getElementById('resFinalPrice').textContent = formatNumber(finalPrice) + ' 元';
+      document.getElementById('resSubsidyDetail').textContent = subsidyDetail;
+      return { carPrice, tax, taxReduction, subsidyAmount, finalPrice, subsidyDetail };
+    }
+
+    async function saveRecord() {
+      const calc = calculate();
+      const recordData = {
+        _id: isDemoMode ? 'demo-' + Date.now() : undefined,
+        carName: document.getElementById('carName').value || '未命名车型',
+        carType: document.getElementById('carType').value,
+        originalPrice: parseFloat(document.getElementById('originalPrice').value) || 0,
+        discount: parseFloat(document.getElementById('discount').value) || 0,
+        carPrice: calc.carPrice, insurance: parseFloat(document.getElementById('insurance').value) || 0,
+        tax: calc.tax, taxReduction: calc.taxReduction,
+        extraFee: parseFloat(document.getElementById('extraFee').value) || 0,
+        extraDiscount: parseFloat(document.getElementById('extraDiscount').value) || 0,
+        subsidyCategory: document.getElementById('subsidyCategory').value,
+        subsidyMethod: document.getElementById('subsidyCategory').value === 'national' ? document.getElementById('nationalMethod').value : null,
+        subsidyAmount: calc.subsidyAmount, subsidyName: getSubsidyName(), finalPrice: calc.finalPrice,
+        comment: document.getElementById('comment').value, createdAt: new Date().toISOString(),
+        aiAnalysis: currentCarInfo?.aiAnalysis || null
+      };
+      if (isDemoMode) { records.unshift(recordData); localStorage.setItem('demoRecords', JSON.stringify(records)); showToast('保存成功（演示模式）', 'success'); loadRecords(); loadDashboard(); return; }
+      try {
+        const res = await fetch(`${API_BASE_URL}/records`, { method: 'POST', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }, body: JSON.stringify(recordData) });
+        const data = await res.json();
+        if (data.success) { showToast('保存成功', 'success'); loadRecords(); loadDashboard(); } else { showToast(data.error || '保存失败', 'error'); }
+      } catch (err) { showToast('网络错误', 'error'); }
+    }
+
+    function getSubsidyName() {
+      const category = document.getElementById('subsidyCategory').value;
+      const method = document.getElementById('nationalMethod')?.value;
+      const isEv = document.getElementById('carType').value !== 'fuel';
+      if (category === 'none') return '无补贴';
+      if (category === 'national') return method === 'scrap' ? (isEv ? '国家报废补贴→新能源' : '国家报废补贴→燃油') : (isEv ? '国家置换补贴→新能源' : '国家置换补贴→燃油');
+      return '苏州购新补贴';
+    }
+
+    function resetCalculator() {
+      document.getElementById('carName').value = ''; document.getElementById('comment').value = '';
+      ['originalPrice','discount','insurance','extraFee','extraDiscount'].forEach(id => document.getElementById(id).value = 0);
+      document.getElementById('carType').value = currentUser?.settings?.defaultCarType || 'fuel';
+      document.getElementById('subsidyCategory').value = 'none'; document.getElementById('nationalMethod').value = 'scrap';
+      document.getElementById('aiEmpty').classList.remove('hidden');
+      document.getElementById('aiLoading').classList.add('hidden');
+      document.getElementById('aiContent').classList.add('hidden');
+      document.getElementById('aiDataDate').classList.add('hidden');
+      document.getElementById('aiSources').classList.add('hidden');
+      const aiError = document.getElementById('aiError');
+      if (aiError) aiError.classList.add('hidden');
+      currentCarInfo = null;
+      isInsuranceManuallySet = false;
+      onSubsidyChange();
+    }
+
+    // ========== 记录列表 ==========
+    async function loadRecords() {
+      if (isDemoMode) { const s = localStorage.getItem('demoRecords'); if (s) records = JSON.parse(s); renderRecords(); return; }
+      try {
+        const res = await fetch(`${API_BASE_URL}/records`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } });
+        const data = await res.json();
+        if (data.success) { records = data.data; renderRecords(); }
+      } catch (e) {}
+    }
+
+    function renderRecords() {
+      const container = document.getElementById('recordsContainer');
+      if (records.length === 0) { container.innerHTML = '<div class="empty-state"><i class="fa fa-inbox"></i><p>暂无对比记录</p></div>'; return; }
+      if (currentView === 'card') renderCardView(container); else renderTableView(container);
+    }
+
+    function renderCardView(container) {
+      container.innerHTML = `<div class="record-list">${records.map(r => `
+        <div class="record-card ${expandedRecords.has(r._id) ? 'expanded' : ''}">
+          <div class="record-header" onclick="toggleExpand('${r._id}')">
+            <div class="record-title">
+              <span class="name">${r.carName}</span>
+              <span class="badge badge-accent">${r.carType === 'fuel' ? '燃油' : r.carType === 'phev' ? '插混' : '纯电'}</span>
+              ${r.subsidyAmount > 0 ? `<span class="badge badge-green">${r.subsidyName}</span>` : '<span class="badge badge-gray">无补贴</span>'}
+              ${r.comment ? '<span class="badge badge-purple"><i class="fa fa-comment"></i></span>' : ''}
+              ${r.aiAnalysis ? '<span class="badge badge-ai"><i class="fa fa-magic"></i> AI</span>' : ''}
+            </div>
+            <div style="display:flex;align-items:center;gap:12px;">
+              <span class="record-price">${formatNumber(r.finalPrice)}</span>
+              <i class="fa fa-chevron-down" style="color:var(--text-muted);transition:transform 0.3s;"></i>
+            </div>
+          </div>
+          <div class="record-content"><div class="record-details">
+            <div class="detail-grid">
+              <div class="detail-item"><div class="label">指导价</div><div class="value">${formatNumber(r.originalPrice)}</div></div>
+              <div class="detail-item"><div class="label">裸车价</div><div class="value">${formatNumber(r.carPrice)}</div></div>
+              <div class="detail-item"><div class="label">购置税</div><div class="value">${formatNumber(r.tax)}</div></div>
+              <div class="detail-item"><div class="label">购置税减免</div><div class="value" style="color:var(--success);">${formatNumber(r.taxReduction)}</div></div>
+              <div class="detail-item"><div class="label">保险费</div><div class="value">${formatNumber(r.insurance)}</div></div>
+              <div class="detail-item"><div class="label">其他费用</div><div class="value">${formatNumber(r.extraFee)}</div></div>
+              <div class="detail-item"><div class="label">其他优惠</div><div class="value" style="color:var(--success);">-${formatNumber(r.extraDiscount)}</div></div>
+              <div class="detail-item"><div class="label">补贴金额</div><div class="value" style="color:var(--success);">-${formatNumber(r.subsidyAmount)}</div></div>
+            </div>
+            ${r.aiAnalysis ? `<div class="comment-section" style="margin-bottom:12px;">
+              <div class="label"><i class="fa fa-magic" style="color:var(--accent);"></i> AI 分析</div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
+                <div><div style="font-size:12px;color:var(--success);margin-bottom:4px;">优点</div><div style="font-size:13px;color:var(--text-secondary);">${r.aiAnalysis.pros?.join('、') || '-'}</div></div>
+                <div><div style="font-size:12px;color:var(--warning);margin-bottom:4px;">缺点</div><div style="font-size:13px;color:var(--text-secondary);">${r.aiAnalysis.cons?.join('、') || '-'}</div></div>
+              </div>
+              ${r.aiAnalysis.discounts ? `<div style="margin-top:8px;padding:8px;background:rgba(0,212,170,0.05);border:1px solid rgba(0,212,170,0.1);border-radius:6px;font-size:12px;color:var(--text-secondary);"><i class="fa fa-gift" style="color:var(--accent);"></i> ${r.aiAnalysis.discounts}</div>` : ''}
+            </div>` : ''}
+            <div class="comment-section">
+              <div class="label"><i class="fa fa-comment-o"></i> 备注</div>
+              <textarea class="form-control" id="comment-${r._id}" style="min-height:60px;font-size:13px;" placeholder="添加备注...">${r.comment || ''}</textarea>
+              <div class="btn-group" style="margin-top:10px;">
+                <button class="btn btn-success" onclick="updateComment('${r._id}')" style="padding:6px 12px;font-size:12px;"><i class="fa fa-save"></i> 保存</button>
+                <button class="btn btn-secondary" onclick="toggleExpand('${r._id}')" style="padding:6px 12px;font-size:12px;">收起</button>
+              </div>
+            </div>
+          </div></div>
+        </div>
+      `).join('')}</div>`;
+    }
+
+    function renderTableView(container) {
+      container.innerHTML = `<div class="table-container"><table><thead><tr>
+        <th>车型</th><th>类型</th><th>指导价</th><th>裸车价</th><th>购置税</th><th>补贴</th><th>落地价</th><th>操作</th>
+      </tr></thead><tbody>
+        ${records.map(r => `<tr>
+          <td><strong>${r.carName}</strong>${r.aiAnalysis ? '<i class="fa fa-magic" style="color:var(--accent);margin-left:4px;"></i>' : ''}</td>
+          <td><span class="badge badge-accent">${r.carType === 'fuel' ? '燃油' : r.carType === 'phev' ? '插混' : '纯电'}</span></td>
+          <td>${formatNumber(r.originalPrice)}</td><td>${formatNumber(r.carPrice)}</td><td>${formatNumber(r.tax)}</td>
+          <td>${r.subsidyAmount > 0 ? `<span style="color:var(--success);">-${formatNumber(r.subsidyAmount)}</span>` : '<span class="badge badge-gray">无</span>'}</td>
+          <td><strong style="color:var(--accent);">${formatNumber(r.finalPrice)}</strong></td>
+          <td><div class="actions">
+            <button class="action-btn" onclick="showRecordDetail('${r._id}')"><i class="fa fa-eye"></i></button>
+            <button class="action-btn delete" onclick="deleteRecord('${r._id}')"><i class="fa fa-trash"></i></button>
+          </div></td>
+        </tr>`).join('')}
+      </tbody></table></div>`;
+    }
+
+    function showRecordDetail(id) {
+      const r = records.find(i => i._id === id); if (!r) return;
+      let c = `【${r.carName}】\n\n指导价: ${formatNumber(r.originalPrice)}元\n落地价: ${formatNumber(r.finalPrice)}元\n补贴: ${r.subsidyName}\n\n`;
+      if (r.aiAnalysis) { c += `【AI分析】\n优点: ${r.aiAnalysis.pros?.join('、') || '-'}\n缺点: ${r.aiAnalysis.cons?.join('、') || '-'}\n`; if (r.aiAnalysis.discounts) c += `优惠: ${r.aiAnalysis.discounts}\n`; c += '\n'; }
+      c += `备注: ${r.comment || '无'}`;
+      alert(c);
+    }
+
+    function switchView(view) {
+      currentView = view;
+      document.querySelectorAll('.view-btn').forEach(btn => btn.classList.remove('active'));
+      event.target.closest('.view-btn').classList.add('active');
+      renderRecords();
+    }
+
+    function toggleExpand(id) { if (expandedRecords.has(id)) expandedRecords.delete(id); else expandedRecords.add(id); renderRecords(); }
+
+    async function updateComment(id) {
+      const comment = document.getElementById(`comment-${id}`).value;
+      if (isDemoMode) { const r = records.find(i => i._id === id); if (r) { r.comment = comment; localStorage.setItem('demoRecords', JSON.stringify(records)); showToast('备注已保存', 'success'); loadRecords(); } return; }
+      try { const res = await fetch(`${API_BASE_URL}/records/${id}`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }, body: JSON.stringify({ comment }) }); const d = await res.json(); if (d.success) { showToast('备注已保存', 'success'); loadRecords(); } } catch (e) { showToast('保存失败', 'error'); }
+    }
+
+    async function deleteRecord(id) {
+      if (!confirm('确定删除这条记录？')) return;
+      if (isDemoMode) { records = records.filter(r => r._id !== id); localStorage.setItem('demoRecords', JSON.stringify(records)); expandedRecords.delete(id); showToast('已删除', 'success'); loadRecords(); loadDashboard(); return; }
+      try { await fetch(`${API_BASE_URL}/records/${id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }); showToast('已删除', 'success'); loadRecords(); loadDashboard(); } catch (e) { showToast('删除失败', 'error'); }
+    }
+
+    async function clearAllRecords() {
+      if (!confirm('确定清空所有记录？')) return;
+      if (isDemoMode) { records = []; localStorage.setItem('demoRecords', JSON.stringify(records)); expandedRecords.clear(); showToast('已清空', 'success'); loadRecords(); loadDashboard(); return; }
+      try { for (const r of records) await fetch(`${API_BASE_URL}/records/${r._id}`, { method: 'DELETE', headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } }); showToast('已清空', 'success'); loadRecords(); loadDashboard(); } catch (e) { showToast('操作失败', 'error'); }
+    }
+
+    // ========== 仪表盘 ==========
+    async function loadDashboard() {
+      if (isDemoMode) {
+        const total = records.length;
+        const m = new Date(); m.setDate(1); m.setHours(0, 0, 0, 0);
+        const monthly = records.filter(r => new Date(r.createdAt) >= m).length;
+        const avg = total > 0 ? records.reduce((s, r) => s + r.finalPrice, 0) / total : 0;
+        document.getElementById('statTotal').textContent = total;
+        document.getElementById('statMonthly').textContent = monthly;
+        document.getElementById('statAvg').textContent = '¥' + formatNumber(avg);
+        document.getElementById('recentRecords').innerHTML = records.length > 0
+          ? records.slice(0, 5).map(r => `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);"><div><strong>${r.carName}</strong><span class="badge badge-accent" style="margin-left:8px;">${r.carType === 'fuel' ? '燃油' : r.carType === 'phev' ? '插混' : '纯电'}</span></div><span style="color:var(--accent);font-weight:600;">${formatNumber(r.finalPrice)} 元</span></div>`).join('')
+          : '<p style="color:var(--text-muted);padding:20px 0;">暂无记录</p>';
+        return;
+      }
+      try {
+        const res = await fetch(`${API_BASE_URL}/records/stats/summary`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } });
+        const data = await res.json();
+        if (data.success) { document.getElementById('statTotal').textContent = data.data.totalRecords; document.getElementById('statMonthly').textContent = data.data.monthlyRecords; document.getElementById('statAvg').textContent = '¥' + formatNumber(data.data.avgPrice); }
+        const rr = await fetch(`${API_BASE_URL}/records`, { headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` } });
+        const rd = await rr.json();
+        if (rd.success && rd.data.length > 0) { document.getElementById('recentRecords').innerHTML = rd.data.slice(0, 5).map(r => `<div style="display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid var(--border);"><div><strong>${r.carName}</strong><span class="badge badge-accent" style="margin-left:8px;">${r.carType === 'fuel' ? '燃油' : r.carType === 'phev' ? '插混' : '纯电'}</span></div><span style="color:var(--accent);font-weight:600;">${formatNumber(r.finalPrice)} 元</span></div>`).join(''); }
+        else { document.getElementById('recentRecords').innerHTML = '<p style="color:var(--text-muted);padding:20px 0;">暂无记录</p>'; }
+      } catch (e) {}
+    }
+
+    async function saveSettings() {
+      const settings = { defaultCarType: document.getElementById('defaultCarType').value };
+      if (isDemoMode) { currentUser.settings = { ...currentUser.settings, ...settings }; localStorage.setItem('demoUser', JSON.stringify(currentUser)); showToast('设置已保存', 'success'); return; }
+      try { const res = await fetch(`${API_BASE_URL}/auth/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }, body: JSON.stringify({ settings }) }); const d = await res.json(); if (d.success) { currentUser = d.data; showToast('设置已保存', 'success'); } } catch (e) { showToast('保存失败', 'error'); }
+    }
+
+    function formatNumber(num) { return Math.round(num).toLocaleString('zh-CN'); }
+    function showToast(message, type = 'success') { const toast = document.getElementById('toast'); toast.textContent = message; toast.className = `toast ${type} show`; setTimeout(() => toast.classList.remove('show'), 3000); }
+  </script>
+</body>
+</html>
