@@ -209,6 +209,7 @@
     .ai-section-title { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .ai-car-info { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
     .ai-info-item { background: rgba(255,255,255,0.03); border: 1px solid var(--border); padding: 10px; border-radius: 8px; }
+    #localDbInfoSection, #localDbInfoCard { border: 1px solid rgba(0,212,170,0.3); background: linear-gradient(135deg, rgba(0,212,170,0.08) 0%, rgba(0,212,170,0.02) 100%); }
     .ai-info-item .label { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
     .ai-info-item .value { font-size: 15px; font-weight: 600; color: var(--text-primary); }
     .ai-list { list-style: none; }
@@ -382,6 +383,52 @@
       .ai-panel { position: static; }
     }
     .hidden { display: none !important; }
+
+    /* ========== 补贴百科页面样式 ========== */
+    .subsidy-filter-bar { display: flex; flex-wrap: wrap; gap: 8px; padding: 12px 0; }
+    .subsidy-filter-bar .filter-group { display: flex; align-items: center; gap: 6px; margin-right: 16px; }
+    .subsidy-filter-bar .filter-label { font-size: 13px; color: var(--text-secondary); white-space: nowrap; flex-shrink: 0; }
+    .subsidy-filter-bar .filter-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+    .subsidy-filter-bar .filter-tag { padding: 5px 14px; border-radius: 16px; font-size: 13px; cursor: pointer; border: 1px solid var(--border); background: transparent; color: var(--text-secondary); transition: all 0.2s; white-space: nowrap; }
+    .subsidy-filter-bar .filter-tag:hover { border-color: var(--accent); color: var(--text-primary); }
+    .subsidy-filter-bar .filter-tag.active { background: var(--accent); border-color: var(--accent); color: #fff; }
+    .subsidy-search-bar { position: relative; margin-bottom: 12px; }
+    .subsidy-search-bar input { width: 100%; padding: 10px 16px 10px 40px; border-radius: 10px; border: 1px solid var(--border); background: var(--bg-input); color: var(--text-primary); font-size: 14px; outline: none; transition: border-color 0.2s; box-sizing: border-box; }
+    .subsidy-search-bar input:focus { border-color: var(--accent); }
+    .subsidy-search-bar input::placeholder { color: var(--text-muted); }
+    .subsidy-search-bar .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: 14px; pointer-events: none; }
+    .subsidy-stats { padding: 8px 0 12px; font-size: 13px; color: var(--text-secondary); border-bottom: 1px solid var(--border); margin-bottom: 16px; }
+    .subsidy-stats .count { color: var(--accent); font-weight: 600; }
+    .subsidy-card { background: var(--bg-card); border-radius: 12px; padding: 18px; margin-bottom: 14px; border: 1px solid var(--border); transition: transform 0.2s, box-shadow 0.2s; }
+    .subsidy-card:hover { transform: translateY(-2px); box-shadow: 0 4px 20px rgba(0,0,0,0.3); }
+    .subsidy-card .card-header { display: flex; align-items: flex-start; justify-content: space-between; gap: 12px; margin-bottom: 10px; }
+    .subsidy-card .card-title { font-size: 16px; font-weight: 600; color: var(--text-primary); line-height: 1.4; flex: 1; }
+    .subsidy-card .status-tag { flex-shrink: 0; padding: 3px 10px; border-radius: 10px; font-size: 12px; font-weight: 500; }
+    .subsidy-card .status-active { background: rgba(76,175,80,0.15); color: #4caf50; border: 1px solid rgba(76,175,80,0.3); }
+    .subsidy-card .status-expired { background: rgba(158,158,158,0.1); color: #888; border: 1px solid rgba(158,158,158,0.2); }
+    .subsidy-card .card-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+    .subsidy-tag { padding: 2px 10px; border-radius: 8px; font-size: 12px; background: rgba(0,212,170,0.1); color: var(--accent); border: 1px solid rgba(0,212,170,0.2); }
+    .subsidy-tag.type-tag { background: rgba(255,152,0,0.1); color: #ff9800; border-color: rgba(255,152,0,0.2); }
+    .subsidy-card .card-amount { display: flex; align-items: baseline; gap: 16px; margin-bottom: 10px; flex-wrap: wrap; }
+    .subsidy-card .max-amount { font-size: 28px; font-weight: 700; color: #ff6b35; line-height: 1.2; }
+    .subsidy-card .max-amount .unit { font-size: 14px; font-weight: 400; color: var(--text-secondary); margin-left: 2px; }
+    .subsidy-card .amount-sub { font-size: 13px; color: var(--text-secondary); }
+    .subsidy-card .amount-sub span { color: var(--text-primary); }
+    .subsidy-card .card-desc { font-size: 13px; color: var(--text-secondary); line-height: 1.6; margin-bottom: 12px; }
+    .subsidy-tier-table { width: 100%; border-collapse: collapse; margin-bottom: 12px; font-size: 13px; }
+    .subsidy-tier-table th { background: rgba(0,212,170,0.08); color: var(--text-secondary); font-weight: 500; padding: 7px 10px; text-align: center; border-bottom: 1px solid var(--border); }
+    .subsidy-tier-table th:first-child { text-align: left; border-radius: 6px 0 0 0; }
+    .subsidy-tier-table th:last-child { border-radius: 0 6px 0 0; }
+    .subsidy-tier-table td { padding: 6px 10px; text-align: center; color: var(--text-primary); border-bottom: 1px solid rgba(42,49,66,0.5); }
+    .subsidy-tier-table td:first-child { text-align: left; color: var(--text-secondary); }
+    .subsidy-tier-table tr:last-child td { border-bottom: none; }
+    .subsidy-tier-table .ev-amount { color: #4caf50; font-weight: 500; }
+    .subsidy-tier-table .fuel-amount { color: #ff9800; font-weight: 500; }
+    .subsidy-card .card-notes { font-size: 12px; color: var(--text-muted); padding: 8px 10px; background: rgba(255,193,7,0.05); border-left: 3px solid #ffc107; border-radius: 0 6px 6px 0; margin-bottom: 8px; line-height: 1.5; }
+    .subsidy-card .card-apply { font-size: 12px; color: var(--accent); }
+    .subsidy-card .card-period { font-size: 12px; color: var(--text-muted); margin-bottom: 8px; }
+    .subsidy-empty { text-align: center; padding: 60px 20px; color: var(--text-muted); font-size: 14px; }
+    .subsidy-empty .empty-icon { font-size: 48px; margin-bottom: 12px; opacity: 0.3; }
   </style>
 </head>
 <body>
@@ -428,6 +475,7 @@
       <nav class="sidebar-nav">
         <a class="nav-item active" data-page="dashboard"><i class="fa fa-home"></i><span>首页</span></a>
         <a class="nav-item" data-page="calculator"><i class="fa fa-calculator"></i><span>价格计算</span></a>
+        <a class="nav-item" data-page="subsidy"><i class="fa fa-gift"></i><span>补贴百科</span></a>
         <a class="nav-item" data-page="records"><i class="fa fa-list-ul"></i><span>对比列表</span></a>
         <a class="nav-item" data-page="settings"><i class="fa fa-cog"></i><span>设置</span></a>
       </nav>
@@ -473,7 +521,7 @@
               <div class="form-row single">
                 <div class="car-search-container">
                   <label class="form-label">车辆名称 / 型号 <span class="required">*</span></label>
-                  <input type="text" id="carName" class="form-control" placeholder="输入车型名称，如：特斯拉 Model Y" autocomplete="off">
+                  <input type="text" id="carName" class="form-control" placeholder="输入车型名称或拼音，如：特斯拉 Model Y 或 lingpao" autocomplete="off">
                   <div class="search-source-toggle">
                     <button class="search-src-btn active" data-source="local" onclick="setSearchSource('local')"><i class="fa fa-database"></i> 本地库</button>
                     <button class="search-src-btn" data-source="ai" onclick="setSearchSource('ai')"><i class="fa fa-cloud"></i> AI搜索</button>
@@ -500,7 +548,7 @@
                 <div><label class="form-label">保险费用（元）<span style="font-size:11px;color:var(--accent);">（自动预估）</span></label><input type="number" id="insurance" class="form-control" value="0" min="0"></div>
               </div>
               <div class="form-row">
-                <div><label class="form-label">上牌/装潢等额外费用（元）</label><input type="number" id="extraFee" class="form-control" value="0" min="0"></div>
+                <div><label class="form-label">上牌/装潢等额外费用（元）</label><input type="number" id="extraFee" class="form-control" value="200" min="0"></div>
                 <div><label class="form-label">其他优惠（元）</label><input type="number" id="extraDiscount" class="form-control" value="0" min="0"></div>
               </div>
               <div class="form-row single">
@@ -509,8 +557,16 @@
                   <select id="subsidyCategory" class="form-control" onchange="onSubsidyChange()">
                     <option value="none">无补贴</option>
                     <option value="national">国家以旧换新补贴（需旧车）</option>
-                    <option value="suzhou">苏州购新补贴（无需旧车）</option>
+                    <option value="suzhou" selected>苏州购新补贴（无需旧车）</option>
+                    <option value="custom">自定义补贴（手动输入）</option>
                   </select>
+                </div>
+              </div>
+              <div class="form-row single hidden" id="customSubsidyRow">
+                <div>
+                  <label class="form-label">自定义补贴金额（元）</label>
+                  <input type="number" id="customSubsidyAmount" class="form-control" value="0" min="0" placeholder="输入当地补贴金额" onchange="calculate()" oninput="calculate()">
+                  <p class="form-hint" style="font-size:12px;color:var(--text-muted);margin-top:4px;">各地区补贴政策不同，请根据当地政策手动输入</p>
                 </div>
               </div>
               <div class="form-row single hidden" id="nationalMethodRow">
@@ -551,6 +607,66 @@
             </div>
           </div>
 
+          <!-- 本地数据库信息（中间位置） -->
+          <div class="card hidden" id="localDbInfoCard" style="margin-bottom: 16px;">
+            <div class="ai-section" style="margin:0;">
+              <div class="ai-section-title" style="cursor:pointer;" onclick="toggleLocalDbDetail()">
+                <i class="fa fa-database" style="color: var(--accent);"></i> 本地数据库信息
+                <i class="fa fa-chevron-down" id="localDbToggleIcon" style="margin-left:auto;font-size:12px;transition:transform 0.2s;transform:rotate(180deg);"></i>
+              </div>
+              
+              <!-- 基本信息（始终显示） -->
+              <div class="ai-car-info" id="localDbInfo">
+                <div class="ai-info-item"><div class="label">品牌</div><div class="value" id="localDbBrand">-</div></div>
+                <div class="ai-info-item"><div class="label">子品牌</div><div class="value" id="localDbSubBrand">-</div></div>
+                <div class="ai-info-item"><div class="label">车系名称</div><div class="value" id="localDbSeriesName">-</div></div>
+                <div class="ai-info-item"><div class="label">车型名称</div><div class="value" id="localDbModelName">-</div></div>
+                <div class="ai-info-item"><div class="label">年款</div><div class="value" id="localDbYear">-</div></div>
+                <div class="ai-info-item"><div class="label">状态</div><div class="value" id="localDbStatus">-</div></div>
+              </div>
+              
+              <!-- 详细信息（可折叠，默认展开） -->
+              <div id="localDbDetail" style="margin-top:12px;">
+                <div style="font-size:12px;color:var(--text-muted);margin-bottom:8px;font-weight:500;">价格信息</div>
+                <div class="ai-car-info">
+                  <div class="ai-info-item"><div class="label">官方指导价</div><div class="value" id="localDbOfficialPrice">-</div></div>
+                  <div class="ai-info-item"><div class="label">经销商报价</div><div class="value" id="localDbDealerPrice">-</div></div>
+                </div>
+                
+                <div style="font-size:12px;color:var(--text-muted);margin:12px 0 8px;font-weight:500;">车身信息</div>
+                <div class="ai-car-info">
+                  <div class="ai-info-item"><div class="label">车身结构</div><div class="value" id="localDbBody">-</div></div>
+                  <div class="ai-info-item"><div class="label">座位数</div><div class="value" id="localDbSeats">-</div></div>
+                  <div class="ai-info-item"><div class="label">车身尺寸</div><div class="value" id="localDbDimensions">-</div></div>
+                  <div class="ai-info-item"><div class="label">轴距(mm)</div><div class="value" id="localDbWheelbase">-</div></div>
+                  <div class="ai-info-item"><div class="label">车辆级别</div><div class="value" id="localDbLevel">-</div></div>
+                </div>
+                
+                <div style="font-size:12px;color:var(--text-muted);margin:12px 0 8px;font-weight:500;">动力系统</div>
+                <div class="ai-car-info">
+                  <div class="ai-info-item"><div class="label">能源类型</div><div class="value" id="localDbEnergy">-</div></div>
+                  <div class="ai-info-item"><div class="label">发动机/电机</div><div class="value" id="localDbEngine">-</div></div>
+                  <div class="ai-info-item"><div class="label">变速箱</div><div class="value" id="localDbTransmission">-</div></div>
+                  <div class="ai-info-item"><div class="label">驱动方式</div><div class="value" id="localDbDriveMode">-</div></div>
+                </div>
+                
+                <div style="font-size:12px;color:var(--text-muted);margin:12px 0 8px;font-weight:500;">续航油耗</div>
+                <div class="ai-car-info">
+                  <div class="ai-info-item"><div class="label">综合油耗</div><div class="value" id="localDbFuelConsumption">-</div></div>
+                  <div class="ai-info-item"><div class="label">纯电续航(km)</div><div class="value" id="localDbEvRange">-</div></div>
+                  <div class="ai-info-item"><div class="label">充电时间</div><div class="value" id="localDbChargingTime">-</div></div>
+                </div>
+                
+                <div style="font-size:12px;color:var(--text-muted);margin:12px 0 8px;font-weight:500;">其他信息</div>
+                <div class="ai-car-info">
+                  <div class="ai-info-item"><div class="label">车系ID</div><div class="value" id="localDbSeriesId">-</div></div>
+                  <div class="ai-info-item"><div class="label">车型ID</div><div class="value" id="localDbSpecId">-</div></div>
+                  <div class="ai-info-item"><div class="label">上市时间</div><div class="value" id="localDbLaunchDate">-</div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+
           <!-- AI面板 -->
           <div class="ai-panel" id="aiPanel">
             <div class="ai-panel-header">
@@ -567,6 +683,7 @@
             </div>
             <div id="aiContent" class="hidden">
               <div id="aiDataDate" class="ai-data-date hidden"></div>
+              
               <div class="ai-section">
                 <div class="ai-section-title"><i class="fa fa-car"></i> 车型信息</div>
                 <div class="ai-car-info">
@@ -615,6 +732,42 @@
         </div>
       </div>
 
+      <!-- 补贴百科页 -->
+      <div id="pageSubsidy" class="page">
+        <div class="page-header"><h2><i class="fa fa-gift" style="color: var(--accent); margin-right: 8px;"></i>补贴百科</h2><p style="font-size:13px;color:var(--text-muted);margin-top:4px;">全国各城市区新车购车补贴汇总 · 数据更新于2026年5月14日</p></div>
+        <div class="subsidy-search-bar">
+          <span class="search-icon"><i class="fa fa-search"></i></span>
+          <input type="text" id="subsidySearchInput" placeholder="搜索城市、省份、关键词..." oninput="filterSubsidies()">
+        </div>
+        <div class="subsidy-filter-bar">
+          <div class="filter-group">
+            <span class="filter-label">地区</span>
+            <div class="filter-tags" id="regionFilters">
+              <span class="filter-tag active" data-region="全部" onclick="setRegionFilter(this)">全部</span>
+              <span class="filter-tag" data-region="国家级" onclick="setRegionFilter(this)">国家级</span>
+              <span class="filter-tag" data-region="华东" onclick="setRegionFilter(this)">华东</span>
+              <span class="filter-tag" data-region="华南" onclick="setRegionFilter(this)">华南</span>
+              <span class="filter-tag" data-region="华中" onclick="setRegionFilter(this)">华中</span>
+              <span class="filter-tag" data-region="西南" onclick="setRegionFilter(this)">西南</span>
+              <span class="filter-tag" data-region="西北" onclick="setRegionFilter(this)">西北</span>
+              <span class="filter-tag" data-region="华北" onclick="setRegionFilter(this)">华北</span>
+              <span class="filter-tag" data-region="东北" onclick="setRegionFilter(this)">东北</span>
+            </div>
+          </div>
+          <div class="filter-group">
+            <span class="filter-label">类型</span>
+            <div class="filter-tags" id="typeFilters">
+              <span class="filter-tag active" data-type="全部" onclick="setTypeFilter(this)">全部</span>
+              <span class="filter-tag" data-type="购新补贴" onclick="setTypeFilter(this)">购新补贴</span>
+              <span class="filter-tag" data-type="以旧换新" onclick="setTypeFilter(this)">以旧换新</span>
+              <span class="filter-tag" data-type="购置税优惠" onclick="setTypeFilter(this)">购置税优惠</span>
+            </div>
+          </div>
+        </div>
+        <div class="subsidy-stats" id="subsidyStats">共找到 <span class="count" id="subsidyCount">0</span> 项补贴政策</div>
+        <div id="subsidyCards"></div>
+      </div>
+
       <!-- 设置页 -->
       <div id="pageSettings" class="page">
         <div class="page-header"><h2>设置</h2></div>
@@ -640,6 +793,172 @@
             </div>
           </div>
           <div class="btn-group"><button class="btn btn-accent" onclick="saveSettings()"><i class="fa fa-save"></i> 保存设置</button></div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 20px; color: var(--text-primary);"><i class="fa fa-user-circle" style="color: var(--accent); margin-right: 8px;"></i>个人偏好设置</h3>
+          <p class="settings-hint" style="margin-bottom: 20px;">设置您的用车偏好，AI 分析时将侧重考虑这些因素。</p>
+          
+          <div class="settings-section">
+            <h4><i class="fa fa-road"></i> 驾乘模式偏好</h4>
+            <div class="form-row">
+              <div>
+                <select id="prefDrivingMode" class="form-control">
+                  <option value="balanced">均衡</option>
+                  <option value="comfort">舒适优先</option>
+                  <option value="sport">运动优先</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-expand"></i> 空间需求</h4>
+            <div class="form-row">
+              <div>
+                <select id="prefSpace" class="form-control">
+                  <option value="compact">紧凑够用</option>
+                  <option value="medium">适中</option>
+                  <option value="large">大空间优先</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-car"></i> 车身尺寸偏好</h4>
+            <div class="form-row">
+              <div>
+                <select id="prefCarSize" class="form-control">
+                  <option value="small">小型车（好停车）</option>
+                  <option value="compact">紧凑型</option>
+                  <option value="medium">中型车</option>
+                  <option value="large">大型车（气场足）</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-paint-brush"></i> 颜值要求</h4>
+            <div class="form-row">
+              <div>
+                <select id="prefAppearance" class="form-control">
+                  <option value="practical">实用为主</option>
+                  <option value="moderate">中等要求</option>
+                  <option value="high">高颜值优先</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-tachometer"></i> 能耗敏感度</h4>
+            <div class="form-row">
+              <div>
+                <select id="prefFuelConsumption" class="form-control">
+                  <option value="low">不太在意</option>
+                  <option value="medium">适中</option>
+                  <option value="high">低能耗优先</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-battery-full"></i> 续航要求</h4>
+            <div class="form-row">
+              <div>
+                <select id="prefRange" class="form-control">
+                  <option value="city">城市通勤为主</option>
+                  <option value="medium">偶尔长途</option>
+                  <option value="long">长途需求高</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-shield"></i> 品牌偏好</h4>
+            <div class="form-row">
+              <div>
+                <select id="prefBrand" class="form-control">
+                  <option value="any">不限品牌</option>
+                  <option value="domestic">国产优先</option>
+                  <option value="joint">合资优先</option>
+                  <option value="luxury">豪华品牌</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-wrench"></i> 可靠性要求</h4>
+            <div class="form-row">
+              <div>
+                <select id="prefReliability" class="form-control">
+                  <option value="standard">标准即可</option>
+                  <option value="high">高可靠性优先</option>
+                  <option value="extreme">极致可靠</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-snowflake-o"></i> 驱动形式</h4>
+            <div class="form-row">
+              <div>
+                <select id="prefDrivetrain" class="form-control">
+                  <option value="twowd">两驱（经济实用）</option>
+                  <option value="awd">四驱优先</option>
+                  <option value="any">无所谓</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-map-marker"></i> 主要用车场景</h4>
+            <div class="form-row">
+              <div>
+                <select id="prefUsage" class="form-control">
+                  <option value="commute">上下班通勤</option>
+                  <option value="family">家庭用车</option>
+                  <option value="longtrip">长途自驾</option>
+                  <option value="mixed">综合使用</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div class="btn-group"><button class="btn btn-accent" onclick="saveUserPreferences()"><i class="fa fa-save"></i> 保存偏好</button></div>
+        </div>
+
+        <div class="card">
+          <h3 style="margin-bottom: 20px; color: var(--text-primary);"><i class="fa fa-database" style="color: var(--accent); margin-right: 8px;"></i>本地数据库管理</h3>
+          <p class="settings-hint" style="margin-bottom: 20px;">导入本地 SQLite 数据库文件（.db），用于车型搜索时快速查询本地数据。</p>
+          
+          <div class="settings-section">
+            <h4><i class="fa fa-upload"></i> 导入数据库</h4>
+            <div class="form-row single">
+              <div>
+                <input type="file" id="dbFileInput" accept=".db,.sqlite,.sqlite3" class="form-control" style="padding: 8px;">
+                <p class="settings-hint">选择 car_data.db 或其他 SQLite 数据库文件</p>
+              </div>
+            </div>
+            <div class="btn-group" style="margin-top: 12px;">
+              <button class="btn btn-accent" onclick="importDatabaseFromSettings()"><i class="fa fa-download"></i> 导入并保存</button>
+              <button class="btn btn-secondary" onclick="clearLocalDatabase()"><i class="fa fa-trash"></i> 清除本地数据</button>
+            </div>
+          </div>
+          
+          <div class="settings-section" id="dbStatusSection" style="margin-top: 16px;">
+            <h4><i class="fa fa-info-circle"></i> 数据库状态</h4>
+            <div id="dbStatusInfo" style="padding: 12px; background: var(--bg-input); border-radius: 8px; font-size: 13px; color: var(--text-secondary);">
+              <i class="fa fa-circle-o"></i> 未加载本地数据库
+            </div>
+          </div>
         </div>
 
         <div class="card">
@@ -677,17 +996,36 @@
           </div>
 
           <div class="settings-section">
-            <h4><i class="fa fa-chrome"></i> 浏览器联网搜索</h4>
+            <h4><i class="fa fa-globe"></i> 模型联网搜索</h4>
             <div class="form-row single">
               <div>
-                <p class="settings-hint" style="color: var(--text-primary);">系统将自动使用浏览器访问以下汽车网站进行实时搜索：</p>
-                <div style="margin-top: 12px; display: flex; flex-wrap: wrap; gap: 8px;">
-                  <span class="settings-hint" style="background: var(--bg-input); padding: 4px 12px; border-radius: 15px; border: 1px solid var(--border);">🚗 汽车之家</span>
-                  <span class="settings-hint" style="background: var(--bg-input); padding: 4px 12px; border-radius: 15px; border: 1px solid var(--border);">🚙 懂车帝</span>
-                  <span class="settings-hint" style="background: var(--bg-input); padding: 4px 12px; border-radius: 15px; border: 1px solid var(--border);">🚕 太平洋汽车</span>
-                  <span class="settings-hint" style="background: var(--bg-input); padding: 4px 12px; border-radius: 15px; border: 1px solid var(--border);">🚘 易车</span>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--border);">
+                  <input type="checkbox" id="enableWebSearch" style="width: 18px; height: 18px; accent-color: var(--accent);">
+                  <span>启用模型联网搜索</span>
+                </label>
+                <p class="settings-hint" style="margin-top: 8px;">
+                启用后，AI 分析时会自动联网搜索最新车型评测和优惠政策。<br>
+                <span style="color: var(--accent);">已支持：</span>千问（Qwen）系列、通义千问、豆包、火山引擎、DeepSeek 等主流联网模型。<br>
+                <span style="color: var(--text-secondary);">关闭时使用模型训练知识库。无需额外配置 API，由模型自身提供联网能力。</span></p>
+              </div>
+            </div>
+          </div>
+
+          <div class="settings-section">
+            <h4><i class="fa fa-brain"></i> Thinking 模式（深度推理）</h4>
+            <div class="form-row single">
+              <div>
+                <label style="display: flex; align-items: center; gap: 10px; cursor: pointer; padding: 10px; background: var(--bg-input); border-radius: 8px; border: 1px solid var(--border);">
+                  <input type="checkbox" id="enableThinking" style="width: 18px; height: 18px; accent-color: var(--accent);">
+                  <span>启用 AI 深度推理模式</span>
+                </label>
+                <p class="settings-hint" style="margin-top: 8px;">
+                启用后 AI 会进行更深入的思考分析，结果更准确，但响应速度会变慢。<br>
+                <span style="color: var(--accent);">支持的模型：</span>DeepSeek R1、QwQ、OpenAI o1/o3 等。<br>
+                <span style="color: var(--text-secondary);">如果当前模型不支持，系统会自动回退到普通模式并提醒您。</span></p>
+                <div id="thinkingWarning" class="hidden" style="margin-top: 8px; padding: 10px; background: rgba(255,165,0,0.1); border: 1px solid rgba(255,165,0,0.3); border-radius: 8px; color: #ffa500; font-size: 13px;">
+                  <i class="fa fa-exclamation-triangle"></i> 当前模型可能不支持 Thinking 模式，已自动回退到普通模式。如需使用深度推理，请切换到 DeepSeek R1、QwQ 或 OpenAI o1/o3 等模型。
                 </div>
-                <p class="settings-hint" style="margin-top: 12px; color: var(--text-secondary);">搜索结果将实时获取最新车型信息、评测和优惠政策，无需配置任何 API Key。</p>
               </div>
             </div>
           </div>
@@ -731,7 +1069,7 @@
     let isInsuranceManuallySet = false;
 
     // ========== 初始化 ==========
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
       checkAuth();
       setupEventListeners();
       const demoUser = localStorage.getItem('demoUser');
@@ -743,6 +1081,9 @@
         showApp();
       }
       loadAiConfigToForm();
+      
+      // 恢复本地数据库
+      await restoreLocalDatabase();
     });
 
     function loadAiConfigToForm() {
@@ -750,6 +1091,14 @@
       document.getElementById('aiApiBase').value = cfg.baseUrl;
       document.getElementById('aiModel').value = cfg.model;
       document.getElementById('aiApiKey').value = cfg.apiKey;
+      // 加载联网搜索和 Thinking 模式设置（默认开启联网）
+      const webSearchEnabled = localStorage.getItem('enableWebSearch');
+      document.getElementById('enableWebSearch').checked = webSearchEnabled === null ? true : webSearchEnabled === 'true';
+      document.getElementById('enableThinking').checked = localStorage.getItem('enableThinking') === 'true';
+      // 检查是否有不支持 thinking 的警告
+      if (localStorage.getItem('thinkingNotSupported') === 'true') {
+        document.getElementById('thinkingWarning').classList.remove('hidden');
+      }
     }
 
     function setupEventListeners() {
@@ -794,9 +1143,14 @@
       localStorage.setItem('aiApiBase', baseUrl);
       localStorage.setItem('aiModel', model);
       localStorage.setItem('aiApiKey', apiKey);
+      // 保存联网搜索和 Thinking 模式设置
+      localStorage.setItem('enableWebSearch', document.getElementById('enableWebSearch').checked ? 'true' : 'false');
+      localStorage.setItem('enableThinking', document.getElementById('enableThinking').checked ? 'true' : 'false');
+      // 切换模型时清除不支持警告
+      localStorage.removeItem('thinkingNotSupported');
+      document.getElementById('thinkingWarning').classList.add('hidden');
+      // 清理旧的配置
       localStorage.removeItem('aiWebSearch');
-      localStorage.removeItem('bingSearchKey');
-      // 清理旧的 Tavily 配置
       localStorage.removeItem('tavilyApiKey');
       localStorage.removeItem('tavilySearchDepth');
       localStorage.removeItem('tavilyMaxResults');
@@ -838,6 +1192,7 @@
     }
 
     // ========== 后端搜索 ==========
+    // ========== 后端搜索（备用） ==========
     async function backendSearch(keyword, type = 'all') {
       try {
         const res = await fetch(`${API_BASE_URL}/search`, {
@@ -854,15 +1209,44 @@
       }
     }
 
+    // ========== 搜索函数（模型联网时此函数不再被使用，仅作兼容保留） ==========
+    async function webSearch(keyword) {
+      // 模型联网时由 AI 自行搜索，此处返回空
+      return { results: [], source: 'model' };
+    }
+
     // ========== JSON 提取工具 ==========
     function extractJSON(text) {
       if (!text || typeof text !== 'string') return null;
       text = text.trim();
       try { return JSON.parse(text); } catch (e) {}
-      const codeBlockMatch = text.match(/```(?:json)?\s*\n?([\s\S]*?)\n?\s*```/);
+
+      // 尝试匹配 markdown 代码块 ```json ... ```
+      const codeBlockMatch = text.match(/```(?:json)?\s*([\s\S]*?)\s*```/);
       if (codeBlockMatch) { try { return JSON.parse(codeBlockMatch[1].trim()); } catch (e) {} }
+
+      // 尝试匹配纯 JSON 对象或数组
       const braceMatch = text.match(/(\{[\s\S]*\}|\[[\s\S]*\])/);
       if (braceMatch) { try { return JSON.parse(braceMatch[1]); } catch (e) {} }
+
+      // 尝试从文本中提取第一个 JSON 对象（处理 JSON 前后有文字的情况）
+      // 查找 { 开始的位置，提取到对应的 } 结束
+      const firstBrace = text.indexOf('{');
+      const lastBrace = text.lastIndexOf('}');
+      if (firstBrace !== -1 && lastBrace !== -1 && lastBrace > firstBrace) {
+        const jsonCandidate = text.substring(firstBrace, lastBrace + 1);
+        try { return JSON.parse(jsonCandidate); } catch (e) {}
+      }
+
+      // 尝试查找 JSON 数组
+      const firstBracket = text.indexOf('[');
+      const lastBracket = text.lastIndexOf(']');
+      if (firstBracket !== -1 && lastBracket !== -1 && lastBracket > firstBracket) {
+        const jsonCandidate = text.substring(firstBracket, lastBracket + 1);
+        try { return JSON.parse(jsonCandidate); } catch (e) {}
+      }
+
+      console.warn('[extractJSON] 无法解析:', text.substring(0, 200));
       return null;
     }
 
@@ -873,13 +1257,91 @@
         throw new Error('请先在设置中配置 AI 模型（API端点、模型名称、API Key）');
       }
       const baseUrl = cfg.baseUrl.replace(/\/+$/, '');
+      const useThinking = localStorage.getItem('enableThinking') === 'true';
+      const webSearchStored = localStorage.getItem('enableWebSearch');
+      const useWebSearch = webSearchStored === null ? true : webSearchStored === 'true';
+
+      const requestBody = {
+        model: cfg.model,
+        messages,
+        temperature
+      };
+
+      // 启用联网搜索（不同模型支持格式不同）
+      if (useWebSearch) {
+        const modelLower = cfg.model.toLowerCase();
+        // 千问/通义千问：不在 requestBody 中添加 tools
+        // 而是在 prompt 中引导其联网（避免返回 tool_calls 格式）
+        if (modelLower.includes('qwen') || modelLower.includes('千问') || modelLower.includes('tongyi') || modelLower.includes('dashscope')) {
+          // 不添加 tools，让模型在 prompt 中自行联网
+        }
+        // 豆包模型（火山引擎，使用 plugins 格式）
+        else if (modelLower.includes('doubao') || modelLower.includes('豆包') || modelLower.includes('volc') || modelLower.includes('ark')) {
+          requestBody.plugins = requestBody.plugins || [];
+          requestBody.plugins.push({ type: 'web_search', enabled: true });
+        }
+        // 通用 OpenAI 兼容格式（部分支持 tools）
+        else if (modelLower.includes('groq') || modelLower.includes('together') || modelLower.includes('anyscale')) {
+          requestBody.tools = requestBody.tools || [];
+          requestBody.tools.push({ type: 'web_search' });
+          requestBody.tool_choice = 'auto';
+        }
+        // DeepSeek R1/QwQ 等推理模型自带联网能力，无需额外参数
+        // 其他 OpenAI 兼容模型
+        else if (!modelLower.includes('deepseek-r1') && !modelLower.includes('qwq')) {
+          requestBody.web_search = true;
+        }
+      }
+
+      // 启用 thinking 模式（仅对支持的模型）
+      if (useThinking) {
+        const modelLower = cfg.model.toLowerCase();
+        if (modelLower.includes('deepseek') || modelLower.includes('qwq') || modelLower.includes('reasoner')) {
+          // DeepSeek R1 等自带 reasoning，无需额外参数
+        } else if (modelLower.includes('o1') || modelLower.includes('o3') || modelLower.includes('o4-mini')) {
+          requestBody.reasoning_effort = 'high';
+        }
+      }
+
       const response = await fetch(`${baseUrl}/chat/completions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${cfg.apiKey}` },
-        body: JSON.stringify({ model: cfg.model, messages, temperature })
+        body: JSON.stringify(requestBody)
       });
       if (!response.ok) {
         const errText = await response.text();
+        // 检测是否因为 thinking/web_search 模式不支持导致的错误
+        if ((useThinking || useWebSearch) && (response.status === 400 || response.status === 422)) {
+          console.warn('thinking 或 web_search 模式不受支持，回退到普通模式');
+          if (useWebSearch) {
+            localStorage.setItem('enableWebSearch', 'false');
+            localStorage.setItem('webSearchNotSupported', 'true');
+            delete requestBody.plugins;
+            delete requestBody.tools;
+            delete requestBody.tool_choice;
+            delete requestBody.web_search;
+          }
+          if (useThinking) {
+            localStorage.setItem('enableThinking', 'false');
+            localStorage.setItem('thinkingNotSupported', 'true');
+            delete requestBody.reasoning_effort;
+          }
+          // 重试
+          const retryResponse = await fetch(`${baseUrl}/chat/completions`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${cfg.apiKey}` },
+            body: JSON.stringify(requestBody)
+          });
+          if (!retryResponse.ok) {
+            const retryErrText = await retryResponse.text();
+            throw new Error(`API请求失败 (${retryResponse.status}): ${retryErrText.substring(0, 200)}`);
+          }
+          const retryData = await retryResponse.json();
+          if (!retryData.choices || retryData.choices.length === 0) {
+            throw new Error('AI 模型未返回有效回复（choices 为空）');
+          }
+          return retryData.choices[0].message?.content || '';
+        }
         throw new Error(`API请求失败 (${response.status}): ${errText.substring(0, 200)}`);
       }
       const data = await response.json();
@@ -896,6 +1358,15 @@
       localDbLoading = true;
       try {
         const SQL = await initSqlJs({ locateFile: file => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${file}` });
+        
+        // 首先尝试从 IndexedDB 加载（用户通过设置页面导入的）
+        const savedBuffer = await loadDatabaseFromIndexedDB();
+        if (savedBuffer) {
+          localDb = new SQL.Database(new Uint8Array(savedBuffer));
+          console.log('从 IndexedDB 加载数据库成功');
+          return localDb;
+        }
+        
         // 尝试从后端加载
         try {
           const response = await fetch(`${API_BASE_URL}/car-db`);
@@ -932,18 +1403,72 @@
       }
     }
 
+    // 常见汽车品牌拼音映射表
+    const brandPinyinMap = {
+      'lingpao': '零跑', 'lingpaoqiche': '零跑汽车',
+      'biyadi': '比亚迪', 'biyadiqiche': '比亚迪汽车',
+      'tesila': '特斯拉', 'tesilaqiche': '特斯拉汽车',
+      'xiaopeng': '小鹏', 'xiaopengqiche': '小鹏汽车',
+      'weilai': '蔚来', 'weilaiqiche': '蔚来汽车',
+      'lixiang': '理想', 'lixiangqiche': '理想汽车',
+      'aion': '埃安', 'aionqiche': '埃安汽车',
+      'jike': '极氪', 'jikeqiche': '极氪汽车',
+      'wuling': '五菱', 'wulingqiche': '五菱汽车',
+      'changcheng': '长城', 'changchengqiche': '长城汽车',
+      'jili': '吉利', 'jiliqiche': '吉利汽车',
+      'changan': '长安', 'changanqiche': '长安汽车',
+      'qirui': '奇瑞', 'qiruiqiche': '奇瑞汽车',
+      'hongqi': '红旗', 'hongqiqiche': '红旗汽车',
+      'baojun': '宝骏', 'baojunqiche': '宝骏汽车',
+      'oula': '欧拉', 'oulaqiche': '欧拉汽车',
+      'han': '汉', 'tang': '唐', 'song': '宋', 'yuan': '元', 'qin': '秦',
+      'model': 'Model', 'models': 'Model S', 'model3': 'Model 3', 'modely': 'Model Y', 'modelx': 'Model X',
+      'p7': 'P7', 'p5': 'P5', 'g9': 'G9', 'g6': 'G6', 'g3': 'G3',
+      'et5': 'ET5', 'et7': 'ET7', 'es6': 'ES6', 'es8': 'ES8',
+      'l7': 'L7', 'l8': 'L8', 'l9': 'L9', 'mega': 'MEGA',
+      'c11': 'C11', 'c10': 'C10', 'c01': 'C01', 't03': 'T03', 'a10': 'A10'
+    };
+
+    // 将拼音转换为可能的中文关键词
+    function pinyinToChinese(keyword) {
+      const lower = keyword.toLowerCase().replace(/\s+/g, '');
+      // 直接匹配完整拼音
+      if (brandPinyinMap[lower]) {
+        return brandPinyinMap[lower];
+      }
+      // 尝试分段匹配
+      for (const [py, ch] of Object.entries(brandPinyinMap)) {
+        if (lower.includes(py)) {
+          return ch;
+        }
+      }
+      return null;
+    }
+
     function searchLocalDb(keyword) {
       if (!localDb) return [];
       // 多关键词模糊搜索：空格分隔，每个关键词都要匹配
       const keywords = keyword.trim().split(/\s+/).filter(Boolean);
       if (keywords.length === 0) return [];
 
+      // 检查是否有拼音，转换为中文
+      const expandedKeywords = [];
+      for (const kw of keywords) {
+        expandedKeywords.push(kw);
+        const chinese = pinyinToChinese(kw);
+        if (chinese && chinese !== kw) {
+          expandedKeywords.push(chinese);
+        }
+      }
+
       // 构建动态 SQL：每个关键词都要在任意搜索字段中匹配
       const searchFields = ['model_name', 'series_name', 'brand', 'vehicle_level', 'body_structure', 'energy_type'];
-      let sql = "SELECT model_name, series_name, brand, official_price, energy_type, vehicle_level, body_structure FROM car_models WHERE ";
+      let sql = `SELECT brand, sub_brand, series_id, series_name, spec_id, year, model_name, official_price, dealer_price, body_structure, energy_type, seats, dimensions, wheelbase, engine, transmission, drive_mode, fuel_consumption, ev_range, charging_time, vehicle_level, launch_date, status FROM car_models WHERE `;
       const params = [];
       const conditions = [];
-      for (const kw of keywords) {
+      // 使用 expandedKeywords（包含拼音转换后的中文）
+      const uniqueKeywords = [...new Set(expandedKeywords)]; // 去重
+      for (const kw of uniqueKeywords) {
         const fieldConditions = searchFields.map(f => `${f} LIKE ?`);
         conditions.push(`(${fieldConditions.join(' OR ')})`);
         const kwPattern = `%${kw}%`;
@@ -959,12 +1484,34 @@
         const obj = {};
         cols.forEach((c, i) => obj[c] = row[i]);
         return {
+          // 基本信息
           name: [obj.brand, obj.series_name, obj.model_name].filter(Boolean).join(' '),
           price: parseCarPrice(obj.official_price),
           level: obj.vehicle_level || '未知',
           energy: obj.energy_type || '燃油',
           body: obj.body_structure || '',
-          source: '本地数据库'
+          source: '本地数据库',
+          // 详细信息
+          brand: obj.brand || '',
+          subBrand: obj.sub_brand || '',
+          seriesId: obj.series_id || '',
+          seriesName: obj.series_name || '',
+          specId: obj.spec_id || '',
+          year: obj.year || '',
+          modelName: obj.model_name || '',
+          officialPrice: obj.official_price || '',
+          dealerPrice: obj.dealer_price || '',
+          seats: obj.seats || '',
+          dimensions: obj.dimensions || '',
+          wheelbase: obj.wheelbase || '',
+          engine: obj.engine || '',
+          transmission: obj.transmission || '',
+          driveMode: obj.drive_mode || '',
+          fuelConsumption: obj.fuel_consumption || '',
+          evRange: obj.ev_range || '',
+          chargingTime: obj.charging_time || '',
+          launchDate: obj.launch_date || '',
+          status: obj.status || ''
         };
       });
     }
@@ -1019,44 +1566,37 @@
         const cacheKey = `search_${keyword}_${new Date().toDateString()}`;
         if (aiAnalysisCache[cacheKey]) { renderCarSearchResults(aiAnalysisCache[cacheKey]); return; }
 
-        let webContext = '';
-        let searchUsed = false;
-        let latestDate = new Date().toISOString().split('T')[0];
+        const webSearchStored2 = localStorage.getItem('enableWebSearch');
+        const useWebSearch = webSearchStored2 === null ? true : webSearchStored2 === 'true';
+        let systemPrompt;
 
-        try {
-          const searchResult = await backendSearch(keyword, 'all');
-          if (searchResult && searchResult.results && searchResult.results.length > 0) {
-            webContext = searchResult.results
-              .filter(r => r.success)
-              .map((r, i) => `[来源${i+1} - ${r.site}]\n${r.snippet}\n链接: ${r.url}`)
-              .join('\n\n');
-            if (webContext) searchUsed = true;
-          }
-        } catch (searchErr) {
-          console.warn('后端搜索失败，回退到纯AI模式:', searchErr.message);
-        }
-
-        let systemPrompt, userPrompt;
-        if (searchUsed) {
-          systemPrompt = `你是一个汽车专家。根据以下从汽车网站获取的最新信息，返回匹配的车型列表（最多5个），包含车型名称、指导价（数字，单位元）、级别、能源类型（纯电动/插电混动/燃油）。
-
-只返回JSON数组格式：[{"name":"车型名称","price":263500,"level":"中型SUV","energy":"纯电动"}]
-
-以下是汽车网站最新信息：
-${webContext}`;
-          userPrompt = `根据以上信息，搜索车型: ${keyword}`;
+        if (useWebSearch) {
+          systemPrompt = `你是一个汽车专家。用户想搜索车型，你必须主动联网搜索最新的车型信息，返回匹配的车型列表（最多5个）。支持中文名称和拼音搜索（如 lingpao=零跑，biyadi=比亚迪）。
+必须包含：车型名称、指导价（数字，单位元）、级别、能源类型（纯电动/插电混动/燃油）。
+只返回JSON数组格式：[{"name":"车型名称","price":263500,"level":"中型SUV","energy":"纯电动"}]`;
         } else {
-          systemPrompt = '你是一个汽车专家。根据用户输入的车型名称，返回匹配的车型列表（最多5个），包含车型名称、指导价（数字，单位元）、级别、能源类型（纯电动/插电混动/燃油）。只返回JSON数组格式：[{"name":"车型名称","price":263500,"level":"中型SUV","energy":"纯电动"}]';
-          userPrompt = `搜索车型: ${keyword}`;
+          systemPrompt = '你是一个汽车专家。根据用户输入的车型名称（支持中文和拼音，如 lingpao=零跑，biyadi=比亚迪），返回匹配的车型列表（最多5个），包含车型名称、指导价（数字，单位元）、级别、能源类型（纯电动/插电混动/燃油）。只返回JSON数组格式：[{"name":"车型名称","price":263500,"level":"中型SUV","energy":"纯电动"}]';
         }
+        const userPrompt = `搜索车型: ${keyword}`;
 
         const content = await callAI([
           { role: 'system', content: systemPrompt },
           { role: 'user', content: userPrompt }
         ], 0.3);
+
+        // 调试：打印 AI 返回的原始内容
+        console.log('[车型搜索 AI原始返回]', content);
+
         const cars = extractJSON(content);
         if (!cars || !Array.isArray(cars) || cars.length === 0) {
-          dropdown.innerHTML = '<div style="padding:20px;text-align:center;color:var(--text-muted);">未找到匹配车型，请尝试其他关键词</div>';
+          // 显示 AI 返回的内容用于调试
+          const truncatedContent = content ? content.substring(0, 150).replace(/\n/g, ' ') : '空内容';
+          dropdown.innerHTML = `<div style="padding:20px;text-align:center;color:var(--text-muted);">
+            <i class="fa fa-exclamation-circle" style="font-size:24px;margin-bottom:8px;display:block;"></i>
+            未找到匹配车型<br>
+            <span style="font-size:12px;color:var(--text-secondary);">AI返回: ${truncatedContent}...</span><br>
+            <span style="font-size:12px;">请尝试其他关键词或检查控制台</span>
+          </div>`;
           return;
         }
         aiAnalysisCache[cacheKey] = cars;
@@ -1087,9 +1627,62 @@ ${webContext}`;
       else if (car.energy.includes('插电混动') || car.energy.includes('混动')) carType = 'phev';
       document.getElementById('carType').value = carType;
       document.getElementById('carSearchDropdown').classList.remove('show');
+      
+      // 填充本地数据库信息
+      fillLocalDbInfo(car);
+      
       isInsuranceManuallySet = false; // 重置手动标记
       autoEstimateInsurance(true);
       getAIAnalysis(car);
+    }
+    
+    // 填充本地数据库信息到中间卡片
+    function fillLocalDbInfo(car) {
+      // 显示本地数据库信息卡片
+      document.getElementById('localDbInfoCard').classList.remove('hidden');
+      
+      // 基本信息
+      document.getElementById('localDbBrand').textContent = car.brand || '-';
+      document.getElementById('localDbSubBrand').textContent = car.subBrand || '-';
+      document.getElementById('localDbSeriesName').textContent = car.seriesName || '-';
+      document.getElementById('localDbModelName').textContent = car.modelName || car.name || '-';
+      document.getElementById('localDbYear').textContent = car.year || '-';
+      document.getElementById('localDbStatus').textContent = car.status || '-';
+      
+      // 价格信息
+      document.getElementById('localDbOfficialPrice').textContent = car.officialPrice || (car.price ? formatNumber(car.price) + ' 元' : '-');
+      document.getElementById('localDbDealerPrice').textContent = car.dealerPrice || '-';
+      
+      // 车身信息
+      document.getElementById('localDbBody').textContent = car.body || '-';
+      document.getElementById('localDbSeats').textContent = car.seats || '-';
+      document.getElementById('localDbDimensions').textContent = car.dimensions || '-';
+      document.getElementById('localDbWheelbase').textContent = car.wheelbase || '-';
+      document.getElementById('localDbLevel').textContent = car.level || '-';
+      
+      // 动力系统
+      document.getElementById('localDbEnergy').textContent = car.energy || '-';
+      document.getElementById('localDbEngine').textContent = car.engine || '-';
+      document.getElementById('localDbTransmission').textContent = car.transmission || '-';
+      document.getElementById('localDbDriveMode').textContent = car.driveMode || '-';
+      
+      // 续航油耗
+      document.getElementById('localDbFuelConsumption').textContent = car.fuelConsumption || '-';
+      document.getElementById('localDbEvRange').textContent = car.evRange || '-';
+      document.getElementById('localDbChargingTime').textContent = car.chargingTime || '-';
+      
+      // 其他信息
+      document.getElementById('localDbSeriesId').textContent = car.seriesId || '-';
+      document.getElementById('localDbSpecId').textContent = car.specId || '-';
+      document.getElementById('localDbLaunchDate').textContent = car.launchDate || '-';
+    }
+    
+    // 折叠/展开本地数据库详情
+    function toggleLocalDbDetail() {
+      const detail = document.getElementById('localDbDetail');
+      const icon = document.getElementById('localDbToggleIcon');
+      detail.classList.toggle('hidden');
+      icon.style.transform = detail.classList.contains('hidden') ? 'rotate(0deg)' : 'rotate(180deg)';
     }
 
     // ========== AI 分析（后端浏览器爬取 + AI） ==========
@@ -1107,85 +1700,78 @@ ${webContext}`;
       try {
         const cacheKey = `analysis_${car.name}_${new Date().toDateString()}`;
         let analysis = null;
-        let searchSources = [];
         const cached = aiAnalysisCache[cacheKey];
-        if (cached) {
-          analysis = cached.analysis;
-          searchSources = cached.searchSources || [];
-        }
+        if (cached) { analysis = cached.analysis; }
         if (!analysis) {
           const today = new Date().toISOString().split('T')[0];
+          const webSearchStored3 = localStorage.getItem('enableWebSearch');
+          const useWebSearch = webSearchStored3 === null ? true : webSearchStored3 === 'true';
 
-          // 第一步：后端浏览器爬取
-          let webContext = '';
-          let searchUsed = false;
-          let latestDate = today;
-          let searchSources = [];
-          try {
-            aiLoading.querySelector('span').textContent = '正在搜索评测和优惠...';
-            const [prosResult, discountResult] = await Promise.all([
-              backendSearch(`${car.name} 优缺点 评测`, 'pros-cons'),
-              backendSearch(`${car.name} 优惠政策 降价`, 'discount')
-            ]);
+          // AI 分析（模型会自行联网搜索）
+          aiLoading.querySelector('span').textContent = useWebSearch ? '联网搜索最新信息并分析...' : '基于知识库分析...';
+          const userPrefs = getUserPreferencesText();
 
-            const allSnippets = [];
-            searchSources = []; // 重置搜索来源
-            [prosResult, discountResult].forEach((result, idx) => {
-              if (result && result.results) {
-                result.results.filter(r => r.success).forEach(r => {
-                  allSnippets.push(`[${r.site}]\n${r.snippet}\n链接: ${r.url}`);
-                  searchSources.push({ site: r.site, url: r.url, snippet: r.snippet });
-                });
-              }
-            });
+          let systemPrompt;
+          if (useWebSearch) {
+            systemPrompt = `你是一个专业的汽车评测专家。当用户询问车型信息时，你必须主动联网搜索最新的评测文章、用户口碑、优惠政策等真实信息，然后进行分析。
 
-            if (allSnippets.length > 0) {
-              webContext = allSnippets.join('\n\n');
-              searchUsed = true;
-              latestDate = today;
-            }
-          } catch (searchErr) {
-            console.warn('后端搜索失败，回退到纯AI模式:', searchErr.message);
-          }
+${userPrefs ? '【重要】请特别关注以下用户偏好：\n' + userPrefs + '\n' : ''}要求：
+1. 必须联网搜索该车型的最新评测、优惠政策、市场行情等信息
+2. 搜索来源可包括：汽车之家、懂车帝、太平洋汽车、易车等
+3. 优惠政策要包含具体金额或折扣比例
+4. 结合用户偏好评价该车型是否符合其使用场景
+5. 每条优缺点必须附带来源网页URL，不能自己编造
 
-          // 第二步：AI 分析
-          aiLoading.querySelector('span').textContent = 'AI 分析中...';
-          let systemPrompt, userPrompt;
+直接返回纯JSON，不要任何其他文字：
+{"pros":[{"text":"优点描述","source":"https://来源网页URL"}],"cons":[{"text":"缺点描述","source":"https://来源网页URL"}],"discounts":"优惠政策描述","brand":"品牌名称","dataDate":"${today}","sources":[{"title":"网页标题","url":"https://...","site":"网站名"}]}
 
-          if (searchUsed) {
-            systemPrompt = `你是一个专业的汽车评测专家。请根据以下从汽车网站获取的最新信息，分析指定车型的优缺点和当前市场优惠政策。
-
-要求：
-1. 优缺点必须基于网站真实信息，不要编造
-2. 优惠政策要包含具体金额或折扣比例
-3. 数据日期：${latestDate}
-
-只返回JSON格式：
-{"pros":["优点1","优点2"],"cons":["缺点1","缺点2"],"discounts":"优惠政策描述","brand":"品牌名称","dataDate":"${latestDate}","searchUsed":true}
-
-以下是汽车网站最新信息：
-${webContext}`;
-            userPrompt = `根据以上信息，分析车型: ${car.name}，指导价: ${car.price}元，级别: ${car.level}，能源类型: ${car.energy}`;
+`;
           } else {
-            systemPrompt = `你是一个专业的汽车评测专家。请分析指定车型的优缺点和当前市场优惠政策。注意：当前未联网，请基于你的知识分析。
+            systemPrompt = `你是一个专业的汽车评测专家。请分析指定车型的优缺点和当前市场优惠政策。
 
-只返回JSON格式：
-{"pros":["优点1","优点2"],"cons":["缺点1","缺点2"],"discounts":"优惠政策描述","brand":"品牌名称","dataDate":"","source":"","searchUsed":false}`;
-            userPrompt = `分析车型: ${car.name}，指导价: ${car.price}元，级别: ${car.level}，能源类型: ${car.energy}`;
+${userPrefs ? '【重要】请特别关注以下用户偏好：\n' + userPrefs + '\n' : ''}要求：
+1. 基于你的专业知识进行分析，提供客观真实的优缺点
+2. 如果有该车型的优惠政策信息请尽量提供
+${userPrefs ? '3. 结合用户偏好评价该车型是否符合其使用场景' : ''}
+
+直接返回纯JSON，不要任何其他文字：
+{"pros":["优点1","优点2"],"cons":["缺点1","缺点2"],"discounts":"优惠政策描述","brand":"品牌名称","dataDate":""}
+
+`;
           }
+          // 构建包含详细车型信息的 userPrompt
+          let carDetails = `车型: ${car.name}，指导价: ${car.price}元，级别: ${car.level}，能源类型: ${car.energy}`;
+          if (car.body) carDetails += `，车身结构: ${car.body}`;
+          if (car.seats) carDetails += `，座位数: ${car.seats}`;
+          if (car.dimensions) carDetails += `，车身尺寸: ${car.dimensions}`;
+          if (car.wheelbase) carDetails += `，轴距: ${car.wheelbase}mm`;
+          if (car.engine) carDetails += `，发动机/电机: ${car.engine}`;
+          if (car.transmission) carDetails += `，变速箱: ${car.transmission}`;
+          if (car.driveMode) carDetails += `，驱动方式: ${car.driveMode}`;
+          if (car.fuelConsumption) carDetails += `，综合油耗: ${car.fuelConsumption}`;
+          if (car.evRange) carDetails += `，纯电续航: ${car.evRange}km`;
+          if (car.chargingTime) carDetails += `，充电时间: ${car.chargingTime}`;
+          if (car.launchDate) carDetails += `，上市时间: ${car.launchDate}`;
+          
+          const userPrompt = `请分析以下车型信息:\n${carDetails}。`;
 
           const content = await callAI([
             { role: 'system', content: systemPrompt },
             { role: 'user', content: userPrompt }
           ], 0.7);
 
+          // 调试：打印 AI 返回的原始内容
+          console.log('[AI原始返回]', content);
+
           analysis = extractJSON(content);
           if (!analysis) {
-            throw new Error('AI 返回的数据格式异常，无法解析分析结果。请重试或更换模型。');
+            // 在错误消息中显示 AI 返回的前200个字符
+            const truncatedContent = content ? content.substring(0, 200).replace(/\n/g, ' ') : '空内容';
+            throw new Error(`AI 返回的数据格式异常，无法解析分析结果。\n\nAI 返回内容：${truncatedContent}...\n\n请按 F12 打开控制台查看完整返回。`);
           }
           if (!Array.isArray(analysis.pros)) analysis.pros = [];
           if (!Array.isArray(analysis.cons)) analysis.cons = [];
-          aiAnalysisCache[cacheKey] = { analysis, searchSources };
+          aiAnalysisCache[cacheKey] = { analysis };
         }
 
         // 渲染结果
@@ -1193,34 +1779,39 @@ ${webContext}`;
         document.getElementById('aiLevel').textContent = car.level;
         document.getElementById('aiEnergy').textContent = car.energy;
         document.getElementById('aiBrand').textContent = analysis.brand || car.name.split(' ')[0];
-        document.getElementById('aiPros').innerHTML = analysis.pros.map(p => `<li><i class="fa fa-check" style="color:var(--success);"></i>${p}</li>`).join('');
-        document.getElementById('aiCons').innerHTML = analysis.cons.map(c => `<li><i class="fa fa-exclamation-triangle" style="color:var(--warning);"></i>${c}</li>`).join('');
+        // 优缺点渲染：兼容字符串格式和 {text, source} 对象格式
+        document.getElementById('aiPros').innerHTML = analysis.pros.map(p => {
+          if (typeof p === 'object' && p.text) {
+            return `<li><i class="fa fa-check" style="color:var(--success);"></i>${p.text}${p.source ? ` <a href="${p.source}" target="_blank" rel="noopener" style="color:var(--accent);font-size:11px;text-decoration:none;"><i class="fa fa-external-link"></i> 来源</a>` : ''}</li>`;
+          }
+          return `<li><i class="fa fa-check" style="color:var(--success);"></i>${p}</li>`;
+        }).join('');
+        document.getElementById('aiCons').innerHTML = analysis.cons.map(c => {
+          if (typeof c === 'object' && c.text) {
+            return `<li><i class="fa fa-exclamation-triangle" style="color:var(--warning);"></i>${c.text}${c.source ? ` <a href="${c.source}" target="_blank" rel="noopener" style="color:var(--accent);font-size:11px;text-decoration:none;"><i class="fa fa-external-link"></i> 来源</a>` : ''}</li>`;
+          }
+          return `<li><i class="fa fa-exclamation-triangle" style="color:var(--warning);"></i>${c}</li>`;
+        }).join('');
         document.getElementById('aiDiscountDisplay').textContent = analysis.discounts || '暂无优惠信息';
         document.getElementById('aiDiscountEdit').value = analysis.discounts || '';
 
         // 显示数据日期和来源
         const dateInfo = document.getElementById('aiDataDate');
-        if (analysis.searchUsed && analysis.dataDate) {
-          dateInfo.innerHTML = `<i class="fa fa-clock-o"></i> 数据日期：${analysis.dataDate} <span class="ai-live-badge"><i class="fa fa-chrome"></i> 浏览器搜索</span>`;
+        const webSearchStored4 = localStorage.getItem('enableWebSearch');
+        const useWebSearch = webSearchStored4 === null ? true : webSearchStored4 === 'true';
+        if (useWebSearch) {
+          dateInfo.innerHTML = `<i class="fa fa-clock-o"></i> 数据日期：${analysis.dataDate || new Date().toISOString().split('T')[0]} <span class="ai-live-badge"><i class="fa fa-globe"></i> 模型联网搜索</span>`;
         } else {
-          dateInfo.innerHTML = `<i class="fa fa-clock-o"></i> <span style="color:var(--warning);">未联网，数据可能非最新</span>`;
+          dateInfo.innerHTML = `<i class="fa fa-database"></i> 基于模型知识库分析`;
         }
         dateInfo.classList.remove('hidden');
 
         // 显示参考来源
         const sourcesEl = document.getElementById('aiSources');
-        if (searchSources.length > 0) {
-          const uniqueSources = [];
-          const seenUrls = new Set();
-          searchSources.forEach(s => {
-            if (!seenUrls.has(s.url)) {
-              seenUrls.add(s.url);
-              uniqueSources.push(s);
-            }
-          });
+        if (useWebSearch && analysis.sources && analysis.sources.length > 0) {
           sourcesEl.innerHTML = `
-            <div class="ai-source-title"><i class="fa fa-link"></i> 参考来源（${uniqueSources.length}）</div>
-            ${uniqueSources.map(s => `<a class="ai-source-link" href="${s.url}" target="_blank" rel="noopener">[${s.site}] ${s.snippet.length > 80 ? s.snippet.substring(0, 80) + '...' : s.snippet}</a>`).join('')}
+            <div class="ai-source-title"><i class="fa fa-link"></i> 参考来源（${analysis.sources.length}）</div>
+            ${analysis.sources.map(s => `<a class="ai-source-link" href="${s.url}" target="_blank" rel="noopener">[${s.site || '来源'}] ${s.title || '查看详情'}</a>`).join('')}
           `;
           sourcesEl.classList.remove('hidden');
         } else {
@@ -1353,7 +1944,7 @@ ${webContext}`;
       if (savedRecords) { records = JSON.parse(savedRecords); }
       else {
         records = [
-          { _id: 'demo-001', carName: '特斯拉 Model Y 2026款', carType: 'ev', originalPrice: 263500, discount: 0, carPrice: 263500, insurance: 8000, tax: 0, taxReduction: 0, extraFee: 500, extraDiscount: 0, subsidyCategory: 'national', subsidyMethod: 'scrap', subsidyAmount: 20000, subsidyName: '国家报废补贴→新能源', finalPrice: 252000, comment: '试驾感受：加速很快，空间宽敞。', createdAt: new Date(Date.now() - 86400000).toISOString(), aiAnalysis: { pros: ['续航长', '智能化程度高', '品牌力强'], cons: ['价格偏高', '内饰简约'], discounts: '现金优惠1万，置换补贴最高2万' } },
+          { _id: 'demo-001', carName: '特斯拉 Model Y 2026款', carType: 'ev', originalPrice: 263500, discount: 0, carPrice: 263500, insurance: 8000, tax: 0, taxReduction: 0, extraFee: 200, extraDiscount: 0, subsidyCategory: 'suzhou', subsidyMethod: null, subsidyAmount: 20000, subsidyName: '苏州购新补贴', finalPrice: 262200, comment: '试驾感受：加速很快，空间宽敞。', createdAt: new Date(Date.now() - 86400000).toISOString(), aiAnalysis: { pros: ['续航长', '智能化程度高', '品牌力强'], cons: ['价格偏高', '内饰简约'], discounts: '现金优惠1万，置换补贴最高2万' } },
           { _id: 'demo-002', carName: '比亚迪 汉 DM-i', carType: 'phev', originalPrice: 189800, discount: 10000, carPrice: 179800, insurance: 6000, tax: 0, taxReduction: 7956, extraFee: 500, extraDiscount: 0, subsidyCategory: 'suzhou', subsidyMethod: null, subsidyAmount: 4000, subsidyName: '苏州购新补贴', finalPrice: 179300, comment: '性价比高，油耗低。', createdAt: new Date(Date.now() - 172800000).toISOString(), aiAnalysis: { pros: ['性价比高', '油耗低', '内饰做工好'], cons: ['品牌力一般', '保值率待观察'], discounts: '现金优惠5000，金融贴息' } }
         ];
         localStorage.setItem('demoRecords', JSON.stringify(records));
@@ -1374,6 +1965,7 @@ ${webContext}`;
       if (currentUser.settings?.defaultCarType) { document.getElementById('carType').value = currentUser.settings.defaultCarType; document.getElementById('defaultCarType').value = currentUser.settings.defaultCarType; }
       document.getElementById('settingsUsername').value = currentUser.username;
       document.getElementById('settingsCreatedAt').value = new Date(currentUser.createdAt).toLocaleDateString();
+      loadUserPreferences(); // 加载用户偏好设置
     }
 
     function navigateTo(page) {
@@ -1382,6 +1974,7 @@ ${webContext}`;
       document.querySelectorAll('.page').forEach(el => el.classList.remove('active'));
       document.getElementById(`page${page.charAt(0).toUpperCase() + page.slice(1)}`).classList.add('active');
       if (page === 'dashboard') loadDashboard();
+      if (page === 'subsidy') filterSubsidies();
       if (page === 'records') loadRecords();
       if (page === 'settings') loadAiConfigToForm();
     }
@@ -1447,6 +2040,7 @@ ${webContext}`;
     function onSubsidyChange() {
       const category = document.getElementById('subsidyCategory').value;
       document.getElementById('nationalMethodRow').classList.toggle('hidden', category !== 'national');
+      document.getElementById('customSubsidyRow').classList.toggle('hidden', category !== 'custom');
       if (category === 'national') updateSubsidyInfo();
       calculate();
     }
@@ -1483,6 +2077,9 @@ ${webContext}`;
         if (carType === 'fuel') { if (carPrice >= 50000 && carPrice < 100000) subsidyAmount = 1000; else if (carPrice >= 100000 && carPrice < 200000) subsidyAmount = 3000; else if (carPrice >= 200000 && carPrice < 400000) subsidyAmount = 5000; else if (carPrice >= 400000) subsidyAmount = 6000; }
         else { if (carPrice >= 50000 && carPrice < 100000) subsidyAmount = 2000; else if (carPrice >= 100000 && carPrice < 200000) subsidyAmount = 4000; else if (carPrice >= 200000 && carPrice < 400000) subsidyAmount = 6000; else if (carPrice >= 400000) subsidyAmount = 7000; }
         subsidyDetail = subsidyAmount > 0 ? `苏州购新补贴（${carType === 'fuel' ? '燃油' : '新能源'}）：${formatNumber(subsidyAmount)}元` : '苏州购新补贴：车价不足5万，无补贴';
+      } else if (subsidyCategory === 'custom') {
+        subsidyAmount = parseInt(document.getElementById('customSubsidyAmount').value) || 0;
+        subsidyDetail = subsidyAmount > 0 ? `自定义补贴：${formatNumber(subsidyAmount)}元` : '自定义补贴：未输入金额';
       }
       const finalPrice = Math.max(0, carPrice + insurance + tax + extraFee - extraDiscount - subsidyAmount);
       document.getElementById('resCarPrice').textContent = formatNumber(carPrice);
@@ -1526,14 +2123,18 @@ ${webContext}`;
       const isEv = document.getElementById('carType').value !== 'fuel';
       if (category === 'none') return '无补贴';
       if (category === 'national') return method === 'scrap' ? (isEv ? '国家报废补贴→新能源' : '国家报废补贴→燃油') : (isEv ? '国家置换补贴→新能源' : '国家置换补贴→燃油');
+      if (category === 'custom') return '自定义补贴';
       return '苏州购新补贴';
     }
 
     function resetCalculator() {
       document.getElementById('carName').value = ''; document.getElementById('comment').value = '';
-      ['originalPrice','discount','insurance','extraFee','extraDiscount'].forEach(id => document.getElementById(id).value = 0);
+      ['originalPrice','discount','insurance','extraDiscount','customSubsidyAmount'].forEach(id => document.getElementById(id).value = 0);
+      document.getElementById('extraFee').value = 200;
       document.getElementById('carType').value = currentUser?.settings?.defaultCarType || 'fuel';
-      document.getElementById('subsidyCategory').value = 'none'; document.getElementById('nationalMethod').value = 'scrap';
+      document.getElementById('subsidyCategory').value = 'suzhou'; document.getElementById('nationalMethod').value = 'scrap';
+      document.getElementById('customSubsidyRow').classList.add('hidden');
+      document.getElementById('localDbInfoCard').classList.add('hidden');
       document.getElementById('aiEmpty').classList.remove('hidden');
       document.getElementById('aiLoading').classList.add('hidden');
       document.getElementById('aiContent').classList.add('hidden');
@@ -1592,8 +2193,8 @@ ${webContext}`;
             ${r.aiAnalysis ? `<div class="comment-section" style="margin-bottom:12px;">
               <div class="label"><i class="fa fa-magic" style="color:var(--accent);"></i> AI 分析</div>
               <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;">
-                <div><div style="font-size:12px;color:var(--success);margin-bottom:4px;">优点</div><div style="font-size:13px;color:var(--text-secondary);">${r.aiAnalysis.pros?.join('、') || '-'}</div></div>
-                <div><div style="font-size:12px;color:var(--warning);margin-bottom:4px;">缺点</div><div style="font-size:13px;color:var(--text-secondary);">${r.aiAnalysis.cons?.join('、') || '-'}</div></div>
+                <div><div style="font-size:12px;color:var(--success);margin-bottom:4px;">优点</div><div style="font-size:13px;color:var(--text-secondary);">${r.aiAnalysis.pros?.map(p => typeof p === 'object' ? p.text : p).join('、') || '-'}</div></div>
+                <div><div style="font-size:12px;color:var(--warning);margin-bottom:4px;">缺点</div><div style="font-size:13px;color:var(--text-secondary);">${r.aiAnalysis.cons?.map(c => typeof c === 'object' ? c.text : c).join('、') || '-'}</div></div>
               </div>
               ${r.aiAnalysis.discounts ? `<div style="margin-top:8px;padding:8px;background:rgba(0,212,170,0.05);border:1px solid rgba(0,212,170,0.1);border-radius:6px;font-size:12px;color:var(--text-secondary);"><i class="fa fa-gift" style="color:var(--accent);"></i> ${r.aiAnalysis.discounts}</div>` : ''}
             </div>` : ''}
@@ -1631,7 +2232,7 @@ ${webContext}`;
     function showRecordDetail(id) {
       const r = records.find(i => i._id === id); if (!r) return;
       let c = `【${r.carName}】\n\n指导价: ${formatNumber(r.originalPrice)}元\n落地价: ${formatNumber(r.finalPrice)}元\n补贴: ${r.subsidyName}\n\n`;
-      if (r.aiAnalysis) { c += `【AI分析】\n优点: ${r.aiAnalysis.pros?.join('、') || '-'}\n缺点: ${r.aiAnalysis.cons?.join('、') || '-'}\n`; if (r.aiAnalysis.discounts) c += `优惠: ${r.aiAnalysis.discounts}\n`; c += '\n'; }
+      if (r.aiAnalysis) { c += `【AI分析】\n优点: ${r.aiAnalysis.pros?.map(p => typeof p === 'object' ? p.text : p).join('、') || '-'}\n缺点: ${r.aiAnalysis.cons?.map(c => typeof c === 'object' ? c.text : c).join('、') || '-'}\n`; if (r.aiAnalysis.discounts) c += `优惠: ${r.aiAnalysis.discounts}\n`; c += '\n'; }
       c += `备注: ${r.comment || '无'}`;
       alert(c);
     }
@@ -1695,8 +2296,388 @@ ${webContext}`;
       try { const res = await fetch(`${API_BASE_URL}/auth/settings`, { method: 'PUT', headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }, body: JSON.stringify({ settings }) }); const d = await res.json(); if (d.success) { currentUser = d.data; showToast('设置已保存', 'success'); } } catch (e) { showToast('保存失败', 'error'); }
     }
 
+    // 保存用户偏好设置
+    async function saveUserPreferences() {
+      const preferences = {
+        drivingMode: document.getElementById('prefDrivingMode').value,
+        space: document.getElementById('prefSpace').value,
+        carSize: document.getElementById('prefCarSize').value,
+        appearance: document.getElementById('prefAppearance').value,
+        fuelConsumption: document.getElementById('prefFuelConsumption').value,
+        range: document.getElementById('prefRange').value,
+        brand: document.getElementById('prefBrand').value,
+        reliability: document.getElementById('prefReliability').value,
+        drivetrain: document.getElementById('prefDrivetrain').value,
+        usage: document.getElementById('prefUsage').value
+      };
+      const settings = { ...currentUser?.settings, preferences };
+      if (isDemoMode) { 
+        currentUser.settings = settings; 
+        localStorage.setItem('demoUser', JSON.stringify(currentUser)); 
+        showToast('偏好设置已保存', 'success'); 
+        return; 
+      }
+      try { 
+        const res = await fetch(`${API_BASE_URL}/auth/settings`, { 
+          method: 'PUT', 
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${localStorage.getItem('token')}` }, 
+          body: JSON.stringify({ settings }) 
+        }); 
+        const d = await res.json(); 
+        if (d.success) { 
+          currentUser = d.data; 
+          showToast('偏好设置已保存', 'success'); 
+        } 
+      } catch (e) { 
+        showToast('保存失败', 'error'); 
+      }
+    }
+
+    // 加载用户偏好设置
+    function loadUserPreferences() {
+      const prefs = currentUser?.settings?.preferences;
+      if (!prefs) return;
+      document.getElementById('prefDrivingMode').value = prefs.drivingMode || 'balanced';
+      document.getElementById('prefSpace').value = prefs.space || 'medium';
+      document.getElementById('prefCarSize').value = prefs.carSize || 'compact';
+      document.getElementById('prefAppearance').value = prefs.appearance || 'moderate';
+      document.getElementById('prefFuelConsumption').value = prefs.fuelConsumption || 'medium';
+      document.getElementById('prefRange').value = prefs.range || 'medium';
+      document.getElementById('prefBrand').value = prefs.brand || 'any';
+      document.getElementById('prefReliability').value = prefs.reliability || 'standard';
+      document.getElementById('prefDrivetrain').value = prefs.drivetrain || 'twowd';
+      document.getElementById('prefUsage').value = prefs.usage || 'commute';
+    }
+
+    // 获取用户偏好文本描述
+    function getUserPreferencesText() {
+      // 优先从 currentUser 获取，演示模式下从 localStorage 获取
+      let prefs = currentUser?.settings?.preferences;
+      if (!prefs && isDemoMode) {
+        const demoUser = localStorage.getItem('demoUser');
+        if (demoUser) {
+          try {
+            const user = JSON.parse(demoUser);
+            prefs = user?.settings?.preferences;
+          } catch (e) {}
+        }
+      }
+      if (!prefs) return '';
+      const drivingModeMap = { balanced: '均衡', comfort: '舒适优先', sport: '运动优先' };
+      const spaceMap = { compact: '紧凑够用', medium: '适中', large: '大空间优先' };
+      const carSizeMap = { small: '小型车', compact: '紧凑型', medium: '中型车', large: '大型车' };
+      const appearanceMap = { practical: '实用为主', moderate: '中等要求', high: '高颜值优先' };
+      const fuelMap = { low: '不太在意', medium: '适中', high: '低能耗优先' };
+      const rangeMap = { city: '城市通勤', medium: '偶尔长途', long: '长途需求高' };
+      const brandMap = { any: '不限品牌', domestic: '国产优先', joint: '合资优先', luxury: '豪华品牌' };
+      const reliabilityMap = { standard: '标准即可', high: '高可靠性优先', extreme: '极致可靠' };
+      const drivetrainMap = { twowd: '两驱', awd: '四驱', any: '无所谓' };
+      const usageMap = { commute: '上下班通勤', family: '家庭用车', longtrip: '长途自驾', mixed: '综合使用' };
+      
+      return `【用户用车偏好】
+• 驾乘模式：${drivingModeMap[prefs.drivingMode] || '均衡'}
+• 空间需求：${spaceMap[prefs.space] || '适中'}
+• 车身尺寸：${carSizeMap[prefs.carSize] || '紧凑型'}
+• 颜值要求：${appearanceMap[prefs.appearance] || '中等要求'}
+• 能耗敏感度：${fuelMap[prefs.fuelConsumption] || '适中'}
+• 续航要求：${rangeMap[prefs.range] || '偶尔长途'}
+• 品牌偏好：${brandMap[prefs.brand] || '不限品牌'}
+• 可靠性要求：${reliabilityMap[prefs.reliability] || '标准即可'}
+• 驱动形式：${drivetrainMap[prefs.drivetrain] || '两驱'}
+• 主要用车场景：${usageMap[prefs.usage] || '上下班通勤'}`;
+    }
+
+    // ========== IndexedDB 数据库持久化 ==========
+    const DB_NAME = 'CarPriceApp';
+    const DB_VERSION = 1;
+    const STORE_NAME = 'localDatabase';
+    let indexedDB = window.indexedDB || window.mozIndexedDB || window.webkitIndexedDB || window.msIndexedDB;
+
+    // 打开 IndexedDB
+    function openIndexedDB() {
+      return new Promise((resolve, reject) => {
+        if (!indexedDB) {
+          reject(new Error('浏览器不支持 IndexedDB'));
+          return;
+        }
+        const request = indexedDB.open(DB_NAME, DB_VERSION);
+        request.onerror = () => reject(request.error);
+        request.onsuccess = () => resolve(request.result);
+        request.onupgradeneeded = (event) => {
+          const db = event.target.result;
+          if (!db.objectStoreNames.contains(STORE_NAME)) {
+            db.createObjectStore(STORE_NAME, { keyPath: 'id' });
+          }
+        };
+      });
+    }
+
+    // 保存数据库到 IndexedDB
+    async function saveDatabaseToIndexedDB(buffer) {
+      try {
+        const db = await openIndexedDB();
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        await new Promise((resolve, reject) => {
+          const request = store.put({ id: 'carData', data: buffer, timestamp: new Date().toISOString() });
+          request.onsuccess = () => resolve();
+          request.onerror = () => reject(request.error);
+        });
+        db.close();
+        return true;
+      } catch (err) {
+        console.error('保存数据库失败:', err);
+        return false;
+      }
+    }
+
+    // 从 IndexedDB 加载数据库
+    async function loadDatabaseFromIndexedDB() {
+      try {
+        const db = await openIndexedDB();
+        const transaction = db.transaction([STORE_NAME], 'readonly');
+        const store = transaction.objectStore(STORE_NAME);
+        const result = await new Promise((resolve, reject) => {
+          const request = store.get('carData');
+          request.onsuccess = () => resolve(request.result);
+          request.onerror = () => reject(request.error);
+        });
+        db.close();
+        return result ? result.data : null;
+      } catch (err) {
+        console.error('加载数据库失败:', err);
+        return null;
+      }
+    }
+
+    // 清除 IndexedDB 中的数据库
+    async function clearDatabaseFromIndexedDB() {
+      try {
+        const db = await openIndexedDB();
+        const transaction = db.transaction([STORE_NAME], 'readwrite');
+        const store = transaction.objectStore(STORE_NAME);
+        await new Promise((resolve, reject) => {
+          const request = store.delete('carData');
+          request.onsuccess = () => resolve();
+          request.onerror = () => reject(request.error);
+        });
+        db.close();
+        return true;
+      } catch (err) {
+        console.error('清除数据库失败:', err);
+        return false;
+      }
+    }
+
+    // 从设置页面导入数据库
+    async function importDatabaseFromSettings() {
+      const fileInput = document.getElementById('dbFileInput');
+      const file = fileInput.files[0];
+      if (!file) {
+        showToast('请先选择数据库文件', 'error');
+        return;
+      }
+
+      try {
+        showToast('正在导入数据库...', 'success');
+        const buffer = await file.arrayBuffer();
+        
+        // 验证数据库文件
+        const SQL = await initSqlJs({ locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${f}` });
+        const testDb = new SQL.Database(new Uint8Array(buffer));
+        
+        // 简单验证：尝试执行一个查询
+        const testResult = testDb.exec("SELECT COUNT(*) FROM car_models");
+        const count = testResult[0]?.values[0]?.[0] || 0;
+        testDb.close();
+
+        // 保存到 IndexedDB
+        const saved = await saveDatabaseToIndexedDB(buffer);
+        if (!saved) {
+          throw new Error('保存到本地存储失败');
+        }
+
+        // 加载到内存
+        localDb = new SQL.Database(new Uint8Array(buffer));
+        
+        updateDbStatus(true, count);
+        showToast(`数据库导入成功！共 ${count} 条车型记录`, 'success');
+        fileInput.value = '';
+      } catch (err) {
+        console.error('导入数据库失败:', err);
+        showToast('导入失败: ' + err.message, 'error');
+      }
+    }
+
+    // 清除本地数据库
+    async function clearLocalDatabase() {
+      if (!confirm('确定要清除本地数据库吗？此操作不可恢复。')) {
+        return;
+      }
+      
+      try {
+        const cleared = await clearDatabaseFromIndexedDB();
+        if (cleared) {
+          localDb = null;
+          updateDbStatus(false);
+          showToast('本地数据库已清除', 'success');
+        } else {
+          showToast('清除失败', 'error');
+        }
+      } catch (err) {
+        showToast('清除失败: ' + err.message, 'error');
+      }
+    }
+
+    // 更新数据库状态显示
+    function updateDbStatus(loaded, count = 0) {
+      const statusEl = document.getElementById('dbStatusInfo');
+      if (loaded) {
+        statusEl.innerHTML = `<i class="fa fa-check-circle" style="color: var(--success);"></i> 已加载本地数据库，共 ${count} 条记录`;
+      } else {
+        statusEl.innerHTML = `<i class="fa fa-circle-o"></i> 未加载本地数据库`;
+      }
+    }
+
+    // 页面加载时尝试恢复数据库
+    async function restoreLocalDatabase() {
+      try {
+        const buffer = await loadDatabaseFromIndexedDB();
+        if (buffer) {
+          const SQL = await initSqlJs({ locateFile: f => `https://cdnjs.cloudflare.com/ajax/libs/sql.js/1.10.3/${f}` });
+          localDb = new SQL.Database(new Uint8Array(buffer));
+          
+          // 获取记录数
+          const result = localDb.exec("SELECT COUNT(*) FROM car_models");
+          const count = result[0]?.values[0]?.[0] || 0;
+          
+          updateDbStatus(true, count);
+          console.log(`本地数据库已恢复，共 ${count} 条记录`);
+        }
+      } catch (err) {
+        console.log('没有保存的数据库或恢复失败:', err);
+      }
+    }
+
     function formatNumber(num) { return Math.round(num).toLocaleString('zh-CN'); }
     function showToast(message, type = 'success') { const toast = document.getElementById('toast'); toast.textContent = message; toast.className = `toast ${type} show`; setTimeout(() => toast.classList.remove('show'), 3000); }
+
+    // ========== 补贴百科 ==========
+    const subsidyData = [
+      { id:'national-ev-tax', region:'国家级', province:'全国', city:'', title:'新能源汽车购置税减免', type:'购置税优惠', status:'进行中', period:'2026年1月1日-2027年12月31日', maxSubsidy:15000, evMax:15000, fuelMax:0, description:'新能源车购置税从10%降至5%征收，每辆最高减免1.5万元。适用于纯电动、插混（含增程式）、燃料电池汽车，9座及以下非营运。', tiers:null, notes:'缴税时系统自动核验抵扣，无需额外申请。', applyMethod:'购车时在税务机关申报减免' },
+      { id:'national-trade-in', region:'国家级', province:'全国', city:'', title:'全国汽车以旧换新补贴', type:'以旧换新', status:'进行中', period:'2026年全年', maxSubsidy:20000, evMax:20000, fuelMax:15000, description:'报废旧车购新能源最高2万/燃油最高1.5万；置换更新新能源最高1.5万/燃油最高1.3万。', tiers:[{range:'报废更新-新能源',ev:20000,fuel:0},{range:'报废更新-燃油',ev:0,fuel:15000},{range:'置换更新-新能源',ev:15000,fuel:0},{range:'置换更新-燃油',ev:0,fuel:13000}], notes:'报废更新与置换更新二选一；可与购置税减免叠加。', applyMethod:'商务部"汽车以旧换新"小程序 / 云闪付App' },
+      { id:'huhehaote-summer', region:'华北', province:'内蒙古', city:'呼和浩特', title:'呼和浩特"清凉一夏"新车购置补贴', type:'购新补贴', status:'进行中', period:'2026年4月29日-6月30日', maxSubsidy:10000, evMax:10000, fuelMax:10000, description:'按购车发票金额分档补贴，新能源与燃油车同等待遇。', tiers:[{range:'15万以下',ev:6000,fuel:6000},{range:'15万以上',ev:10000,fuel:10000}], notes:'不能与国家/自治区报废补贴、置换补贴叠加。', applyMethod:'青橙融媒App' },
+      { id:'shanghai-no-car', region:'华东', province:'上海', city:'', title:'上海市无车家庭新能源购车补贴', type:'购新补贴', status:'进行中', period:'2026年全年', maxSubsidy:12000, evMax:12000, fuelMax:8000, description:'无车家庭购纯电动补贴1.2万元，购插混补贴8000元。可与各区消费券叠加。', tiers:null, notes:'仅限无车家庭；需满足本市户籍或社保条件。', applyMethod:'上海"一网通办"平台' },
+      { id:'jiangsu-unified', region:'华东', province:'江苏省', city:'', title:'江苏省统一购新补贴', type:'购新补贴', status:'进行中', period:'2026年3月21日-6月30日', maxSubsidy:7000, evMax:7000, fuelMax:6000, description:'全省统一购车补贴，按价格分四档，新能源每档比燃油高1000元。', tiers:[{range:'5-10万',ev:2000,fuel:1000},{range:'10-20万',ev:4000,fuel:3000},{range:'20-40万',ev:6000,fuel:5000},{range:'40万以上',ev:7000,fuel:6000}], notes:'不可与报废更新、置换更新重复享受。', applyMethod:'苏服办App / 江苏政务服务网' },
+      { id:'suzhou-jiangsu', region:'华东', province:'江苏省', city:'苏州', title:'苏州市购新补贴（执行省标准）', type:'购新补贴', status:'进行中', period:'2026年3月21日-6月30日', maxSubsidy:7000, evMax:7000, fuelMax:6000, description:'执行江苏省统一标准，不限户籍、不限上牌地，在苏州购车即可申请。', tiers:[{range:'5-10万',ev:2000,fuel:1000},{range:'10-20万',ev:4000,fuel:3000},{range:'20-40万',ev:6000,fuel:5000},{range:'40万以上',ev:7000,fuel:6000}], notes:'不限户籍不限上牌，在苏州市购车即可享受。', applyMethod:'苏服办App / 苏州发布公众号' },
+      { id:'hangzhou-xiaoshan', region:'华东', province:'浙江省', city:'杭州-萧山区', title:'杭州萧山区二季度购车补贴', type:'购新补贴', status:'进行中', period:'2026年4月13日-6月30日', maxSubsidy:6000, evMax:6000, fuelMax:6000, description:'萧山区限时购车补贴，总额2000万元，按价格分四档。', tiers:[{range:'5-10万',ev:1000,fuel:1000},{range:'10-20万',ev:2000,fuel:2000},{range:'20-30万',ev:4000,fuel:4000},{range:'30万以上',ev:6000,fuel:6000}], notes:'名额有限，先到先得。', applyMethod:'萧山区商务局指定平台' },
+      { id:'hangzhou-yuhang', region:'华东', province:'浙江省', city:'杭州-余杭区', title:'杭州余杭区购车补贴', type:'购新补贴', status:'进行中', period:'2026年5月1日起', maxSubsidy:11000, evMax:11000, fuelMax:11000, description:'余杭区购车补贴力度大，政府现金+商超消费券叠加，最高1.1万元。', tiers:[{range:'5-10万',ev:2000,fuel:2000},{range:'10-20万',ev:4000,fuel:4000},{range:'20-30万',ev:6000,fuel:6000},{range:'30-40万',ev:8000,fuel:8000},{range:'40万以上',ev:11000,fuel:11000}], notes:'现金+消费券组合发放。', applyMethod:'余杭区商务局指定平台' },
+      { id:'hangzhou-shangcheng', region:'华东', province:'浙江省', city:'杭州-上城区', title:'杭州上城区第二轮购车补贴', type:'购新补贴', status:'进行中', period:'2026年5月7日-6月30日', maxSubsidy:8000, evMax:8000, fuelMax:8000, description:'上城区限时购车补贴，总额1500万元，按价格分五档。', tiers:[{range:'5-10万',ev:1000,fuel:1000},{range:'10-20万',ev:2000,fuel:2000},{range:'20-30万',ev:4000,fuel:4000},{range:'30-40万',ev:6000,fuel:6000},{range:'40万以上',ev:8000,fuel:8000}], notes:'活动时间短，名额有限。', applyMethod:'上城区商务局指定平台' },
+      { id:'nanchang-round3', region:'华东', province:'江西省', city:'南昌', title:'南昌市第三轮购车补贴', type:'购新补贴', status:'进行中', period:'2026年5月起', maxSubsidy:6000, evMax:6000, fuelMax:5000, description:'按裸车价分五档，新能源每档比燃油高1000元。', tiers:[{range:'5-15万',ev:2000,fuel:1000},{range:'15-25万',ev:3000,fuel:2000},{range:'25-35万',ev:4000,fuel:3000},{range:'35-45万',ev:5000,fuel:4000},{range:'45万以上',ev:6000,fuel:5000}], notes:'与国家报废更新补贴不能叠加。', applyMethod:'南昌市商务局指定平台' },
+      { id:'jinan-subsidy', region:'华东', province:'山东省', city:'济南', title:'济南市"泉城购"购车补贴', type:'购新补贴', status:'进行中', period:'2026年5月1日起', maxSubsidy:12000, evMax:12000, fuelMax:12000, description:'总额5000万元，现金+消费券组合，不限户籍不限上牌。', tiers:[{range:'15万以下',ev:3000,fuel:3000},{range:'15-25万',ev:5000,fuel:5000},{range:'25-35万',ev:6000,fuel:6000},{range:'35-50万',ev:8000,fuel:8000},{range:'50万以上',ev:12000,fuel:12000}], notes:'不限消费者户籍、不限车辆上牌地区。', applyMethod:'济南市商务局指定平台' },
+      { id:'xiamen-trade-in', region:'华东', province:'福建省', city:'厦门', title:'厦门市置换更新补贴', type:'以旧换新', status:'进行中', period:'2026年全年', maxSubsidy:15000, evMax:15000, fuelMax:13000, description:'换购新能源按车价8%最高1.5万，燃油按6%最高1.3万。', tiers:null, notes:'需转让或报废名下旧车。', applyMethod:'懂车帝App / 厦门"i厦门"App' },
+      { id:'guangdong-unified', region:'华南', province:'广东省', city:'', title:'广东省"广东优品购"统一购新补贴', type:'购新补贴', status:'进行中', period:'2026年5月1日-12月31日', maxSubsidy:5000, evMax:5000, fuelMax:5000, description:'全省统一购新补贴，按价格分三档，可与国家补贴叠加。', tiers:[{range:'6-8万',ev:2000,fuel:2000},{range:'8-15万',ev:4000,fuel:4000},{range:'15万以上',ev:5000,fuel:5000}], notes:'不可与国家"以旧换新"同时申请，二选一。', applyMethod:'粤省事App / 广东政务服务网' },
+      { id:'shenzhen-futian', region:'华南', province:'广东省', city:'深圳-福田区', title:'深圳福田区购车补贴', type:'购新补贴', status:'进行中', period:'2026年2月1日起', maxSubsidy:6000, evMax:6000, fuelMax:6000, description:'福田区购车补贴，总额1000万元，20万起补。', tiers:[{range:'20-30万',ev:4000,fuel:4000},{range:'30-50万',ev:5000,fuel:5000},{range:'50万以上',ev:6000,fuel:6000}], notes:'需在福田区购车。', applyMethod:'福田区企业服务平台' },
+      { id:'shenzhen-baoan', region:'华南', province:'广东省', city:'深圳-宝安区', title:'深圳宝安区购车补贴', type:'购新补贴', status:'进行中', period:'2026年3月20日-6月30日', maxSubsidy:6000, evMax:6000, fuelMax:6000, description:'宝安区限时购车补贴，7万起补，可同时申请车险保费补贴。', tiers:[{range:'7-20万',ev:2000,fuel:2000},{range:'20-30万',ev:4000,fuel:4000},{range:'30万以上',ev:6000,fuel:6000}], notes:'名额有限，先到先得。', applyMethod:'宝安区商务局指定平台' },
+      { id:'guangxi-subsidy', region:'华南', province:'广西', city:'', title:'广西壮族自治区购车补贴', type:'购新补贴', status:'进行中', period:'2026年5月1日起', maxSubsidy:6000, evMax:6000, fuelMax:5000, description:'全区购车补贴，按价税合计分三档，新能源每档比燃油高1000元。', tiers:[{range:'3-8万',ev:3000,fuel:2000},{range:'8-20万',ev:4000,fuel:3000},{range:'20万以上',ev:6000,fuel:5000}], notes:'不与国家报废更新、广西置换更新叠加。', applyMethod:'广西政务服务App（壮掌通）' },
+      { id:'henan-trade-in', region:'华中', province:'河南省', city:'', title:'河南省以旧换新补贴', type:'以旧换新', status:'进行中', period:'2026年全年', maxSubsidy:20000, evMax:20000, fuelMax:15000, description:'执行全国统一标准。报废更新新能源最高2万/燃油最高1.5万，置换更新新能源最高1.5万/燃油最高1.3万。', tiers:[{range:'报废更新-新能源',ev:20000,fuel:0},{range:'报废更新-燃油',ev:0,fuel:15000},{range:'置换更新-新能源',ev:15000,fuel:0},{range:'置换更新-燃油',ev:0,fuel:13000}], notes:'执行全国统一标准。', applyMethod:'商务部"汽车以旧换新"小程序 / 云闪付App' },
+      { id:'hubei-trade-in', region:'华中', province:'湖北省', city:'', title:'湖北省以旧换新补贴', type:'以旧换新', status:'进行中', period:'2026年全年', maxSubsidy:20000, evMax:20000, fuelMax:15000, description:'执行全国统一标准。报废更新新能源最高2万/燃油最高1.5万，置换更新新能源最高1.5万/燃油最高1.3万。', tiers:[{range:'报废更新-新能源',ev:20000,fuel:0},{range:'报废更新-燃油',ev:0,fuel:15000},{range:'置换更新-新能源',ev:15000,fuel:0},{range:'置换更新-燃油',ev:0,fuel:13000}], notes:'执行全国统一标准。', applyMethod:'商务部"汽车以旧换新"小程序 / 云闪付App' },
+      { id:'hunan-trade-in', region:'华中', province:'湖南省', city:'', title:'湖南省以旧换新补贴', type:'以旧换新', status:'进行中', period:'2026年全年', maxSubsidy:20000, evMax:20000, fuelMax:15000, description:'执行全国统一标准。报废更新新能源最高2万/燃油最高1.5万，置换更新新能源最高1.5万/燃油最高1.3万。', tiers:[{range:'报废更新-新能源',ev:20000,fuel:0},{range:'报废更新-燃油',ev:0,fuel:15000},{range:'置换更新-新能源',ev:15000,fuel:0},{range:'置换更新-燃油',ev:0,fuel:13000}], notes:'执行全国统一标准。', applyMethod:'湖南省汽车置换服务平台（云闪付APP）' },
+      { id:'chengdu-wuhou', region:'西南', province:'四川省', city:'成都-武侯区', title:'成都武侯区限时购车补贴', type:'购新补贴', status:'进行中', period:'2026年5月5日-5月31日', maxSubsidy:10000, evMax:10000, fuelMax:10000, description:'限时活动，总额700万元，按价格分五档，以云闪付红包发放。', tiers:[{range:'10万以下',ev:2000,fuel:2000},{range:'10-20万',ev:4000,fuel:4000},{range:'20-30万',ev:6000,fuel:6000},{range:'30-40万',ev:8000,fuel:8000},{range:'40万以上',ev:10000,fuel:10000}], notes:'限时活动仅5月，名额有限。', applyMethod:'云闪付App' },
+      { id:'chongqing-subsidy', region:'西南', province:'重庆市', city:'', title:'重庆市购车补贴', type:'购新补贴', status:'进行中', period:'2026年5月1日-12月31日', maxSubsidy:8000, evMax:8000, fuelMax:8000, description:'全市购车补贴，按价格分五档，最高8000元。', tiers:[{range:'5万以下',ev:1000,fuel:1000},{range:'5-10万',ev:2000,fuel:2000},{range:'10-25万',ev:4000,fuel:4000},{range:'25-40万',ev:6000,fuel:6000},{range:'40万以上',ev:8000,fuel:8000}], notes:'不可与报废更新、置换更新重复享受。', applyMethod:'重庆"渝快办"App' },
+      { id:'guizhou-subsidy', region:'西南', province:'贵州省', city:'', title:'贵州省购车补贴', type:'购新补贴', status:'进行中', period:'2026年4月1日-12月31日', maxSubsidy:6000, evMax:6000, fuelMax:6000, description:'全省购车补贴，需摇号中签，按价格分四档。', tiers:[{range:'10万以下',ev:3000,fuel:3000},{range:'10-20万',ev:4000,fuel:4000},{range:'20-30万',ev:5000,fuel:5000},{range:'30万以上',ev:6000,fuel:6000}], notes:'需登记申请、摇号中签；报废/置换/购新三选一。', applyMethod:'贵州省商务厅指定平台' },
+      { id:'yunnan-ev-coupon', region:'西南', province:'云南省', city:'', title:'云南省新能源"彩云消费券"', type:'购新补贴', status:'进行中', period:'2026年5月1日起', maxSubsidy:7000, evMax:7000, fuelMax:0, description:'仅限新能源车，按价格分两档发放消费券，先领先得。', tiers:[{range:'10-18万',ev:5000,fuel:0},{range:'18万以上',ev:7000,fuel:0}], notes:'仅限新能源车；发票开具地需在云南省内。', applyMethod:'云闪付App' },
+      { id:'xian-qujiang', region:'西北', province:'陕西省', city:'西安-曲江新区', title:'西安曲江新区购车补贴', type:'购新补贴', status:'进行中', period:'2026年全年', maxSubsidy:8000, evMax:8000, fuelMax:6000, description:'按含税价比例补贴：新能源2%最高8000元，燃油1.5%最高6000元。', tiers:null, notes:'不与国家报废更新和陕西省置换更新重复享受。', applyMethod:'曲江新区管委会指定平台' },
+      { id:'lanzhou-subsidy', region:'西北', province:'甘肃省', city:'兰州', title:'兰州市购车补贴', type:'购新补贴', status:'进行中', period:'2026年全年', maxSubsidy:5500, evMax:5500, fuelMax:4500, description:'按含税价3%补贴，新能源最高5500元，燃油最高4500元。', tiers:null, notes:'不与报废更新、置换更新叠加。', applyMethod:'兰州市商务局指定平台' },
+      { id:'xining-subsidy', region:'西北', province:'青海省', city:'西宁', title:'西宁市购车补贴', type:'购新补贴', status:'进行中', period:'2026年5月1日起', maxSubsidy:6000, evMax:6000, fuelMax:5000, description:'新能源分两档最高6000元，燃油最高4000元+1000元加油券。', tiers:[{range:'新能源10-20万',ev:5000,fuel:0},{range:'新能源20万以上',ev:6000,fuel:0},{range:'燃油10-20万',ev:0,fuel:4000},{range:'燃油20万以上',ev:0,fuel:5000}], notes:'燃油车另赠1000元加油券。', applyMethod:'西宁市商务局指定平台' },
+      { id:'urumqi-subsidy', region:'西北', province:'新疆', city:'乌鲁木齐', title:'乌鲁木齐市购车补贴', type:'购新补贴', status:'进行中', period:'2026年5月15日起', maxSubsidy:10000, evMax:10000, fuelMax:10000, description:'总额600万元，按价格分四档，西北地区力度最大。', tiers:[{range:'5-10万',ev:3000,fuel:3000},{range:'10-20万',ev:5000,fuel:5000},{range:'20-30万',ev:7000,fuel:7000},{range:'30万以上',ev:10000,fuel:10000}], notes:'每人限享1次，不与国家报废/置换叠加。', applyMethod:'乌鲁木齐市商务局指定平台' },
+      { id:'harbin-trade-in', region:'东北', province:'黑龙江省', city:'哈尔滨', title:'哈尔滨市以旧换新补贴', type:'以旧换新', status:'进行中', period:'2026年全年', maxSubsidy:20000, evMax:20000, fuelMax:15000, description:'执行全国统一标准。报废更新新能源最高2万/燃油最高1.5万，置换更新新能源最高1.5万/燃油最高1.3万。', tiers:[{range:'报废更新-新能源',ev:20000,fuel:0},{range:'报废更新-燃油',ev:0,fuel:15000},{range:'置换更新-新能源',ev:15000,fuel:0},{range:'置换更新-燃油',ev:0,fuel:13000}], notes:'执行全国统一标准。', applyMethod:'商务部"汽车以旧换新"小程序 / 云闪付App' }
+    ];
+
+    let currentRegion = '全部';
+    let currentType = '全部';
+
+    function setRegionFilter(el) {
+      document.querySelectorAll('#regionFilters .filter-tag').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      currentRegion = el.dataset.region;
+      filterSubsidies();
+    }
+
+    function setTypeFilter(el) {
+      document.querySelectorAll('#typeFilters .filter-tag').forEach(t => t.classList.remove('active'));
+      el.classList.add('active');
+      currentType = el.dataset.type;
+      filterSubsidies();
+    }
+
+    function filterSubsidies() {
+      const keyword = (document.getElementById('subsidySearchInput').value || '').trim().toLowerCase();
+      const filtered = subsidyData.filter(item => {
+        if (currentRegion !== '全部' && item.region !== currentRegion) return false;
+        if (currentType !== '全部' && item.type !== currentType) return false;
+        if (keyword) {
+          const s = [item.title, item.province, item.city, item.region, item.description, item.type].join(' ').toLowerCase();
+          if (!s.includes(keyword)) return false;
+        }
+        return true;
+      });
+      renderSubsidyCards(filtered);
+    }
+
+    function formatSubsidyAmount(amount) {
+      if (!amount && amount !== 0) return '--';
+      if (amount >= 10000) return (amount / 10000).toFixed(amount % 10000 === 0 ? 0 : 1) + '万';
+      return amount.toLocaleString();
+    }
+
+    function renderSubsidyCards(data) {
+      const container = document.getElementById('subsidyCards');
+      document.getElementById('subsidyCount').textContent = data.length;
+      if (data.length === 0) {
+        container.innerHTML = '<div class="subsidy-empty"><div class="empty-icon"><i class="fa fa-search"></i></div><div>没有找到匹配的补贴政策</div><div style="margin-top:8px;font-size:12px;">试试调整筛选条件或搜索关键词</div></div>';
+        return;
+      }
+      container.innerHTML = data.map(item => {
+        const statusClass = item.status === '进行中' ? 'status-active' : 'status-expired';
+        const location = [item.province, item.city].filter(Boolean).join(' · ');
+        let amountHtml = '';
+        if (item.evMax > 0 && item.fuelMax > 0) {
+          amountHtml = `<div class="max-amount">${formatSubsidyAmount(item.maxSubsidy)}<span class="unit">元</span></div><div class="amount-sub">新能源最高 <span>${formatSubsidyAmount(item.evMax)}元</span> · 燃油最高 <span>${formatSubsidyAmount(item.fuelMax)}元</span></div>`;
+        } else if (item.evMax > 0) {
+          amountHtml = `<div class="max-amount">${formatSubsidyAmount(item.evMax)}<span class="unit">元</span></div><div class="amount-sub">仅限新能源车型</div>`;
+        } else {
+          amountHtml = `<div class="max-amount">${formatSubsidyAmount(item.fuelMax)}<span class="unit">元</span></div><div class="amount-sub">仅限燃油车型</div>`;
+        }
+        let tierHtml = '';
+        if (item.tiers && item.tiers.length > 0) {
+          const hasBoth = item.tiers.some(t => t.ev > 0 && t.fuel > 0);
+          tierHtml = '<table class="subsidy-tier-table"><thead><tr><th>价格区间</th>';
+          tierHtml += hasBoth ? '<th>新能源</th><th>燃油</th>' : '<th>补贴金额</th>';
+          tierHtml += '</tr></thead><tbody>';
+          item.tiers.forEach(t => {
+            tierHtml += `<tr><td>${t.range}</td>`;
+            if (hasBoth) {
+              tierHtml += `<td class="ev-amount">${t.ev > 0 ? formatSubsidyAmount(t.ev) + '元' : '-'}</td><td class="fuel-amount">${t.fuel > 0 ? formatSubsidyAmount(t.fuel) + '元' : '-'}</td>`;
+            } else {
+              tierHtml += `<td>${(t.ev || t.fuel) > 0 ? formatSubsidyAmount(t.ev || t.fuel) + '元' : '-'}</td>`;
+            }
+            tierHtml += '</tr>';
+          });
+          tierHtml += '</tbody></table>';
+        }
+        return `<div class="subsidy-card">
+          <div class="card-header"><div class="card-title">${item.title}</div><span class="status-tag ${statusClass}">${item.status}</span></div>
+          <div class="card-tags"><span class="subsidy-tag">${item.region}</span><span class="subsidy-tag">${location}</span><span class="subsidy-tag type-tag">${item.type}</span></div>
+          <div class="card-amount">${amountHtml}</div>
+          <div class="card-period"><i class="fa fa-clock-o"></i> ${item.period}</div>
+          <div class="card-desc">${item.description}</div>
+          ${tierHtml}
+          ${item.notes ? `<div class="card-notes"><i class="fa fa-exclamation-triangle"></i> ${item.notes}</div>` : ''}
+          <div class="card-apply"><i class="fa fa-external-link"></i> ${item.applyMethod}</div>
+        </div>`;
+      }).join('');
+    }
   </script>
 </body>
 </html>
